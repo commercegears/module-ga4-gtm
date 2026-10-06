@@ -1,0 +1,60 @@
+<?php
+/**
+ * Copyright © Softaware Commerce. All rights reserved.
+ */
+declare(strict_types=1);
+
+use Magento\Framework\Escaper;
+use Softaware\Ga4\Block\Adminhtml\Export;
+
+/** @var Export $block */
+/** @var Escaper $escaper */
+$stores = $block->getStores();
+?>
+<div class="sw-ga4-export" style="max-width: 900px">
+    <p><?= $escaper->escapeHtml(__('Download a ready-made Google Tag Manager container with a Google tag, GA4 event tags, triggers and variables for every event this module sends. Import it instead of building the tags by hand.')) ?></p>
+
+    <form method="post" action="<?= $escaper->escapeUrl($block->getDownloadUrl()) ?>" style="margin: 2rem 0">
+        <input name="form_key" type="hidden" value="<?= $escaper->escapeHtmlAttr($block->getFormKey()) ?>"/>
+        <div class="admin__field">
+            <label class="admin__field-label" for="sw-ga4-store"><span><?= $escaper->escapeHtml(__('Settings from')) ?></span></label>
+            <div class="admin__field-control">
+                <select id="sw-ga4-store" name="store" class="admin__control-select">
+                    <?php foreach ($stores as $store): ?>
+                        <option value="<?= (int)$store['id'] ?>">
+                            <?= $escaper->escapeHtml($store['name']) ?>
+                            (<?= $escaper->escapeHtml($store['measurement_id'] ?: (string)__('no measurement ID')) ?>)
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+                <div class="admin__field-note">
+                    <?= $escaper->escapeHtml(__('The GA4 measurement ID of this scope is written into the "Const - GA4 Measurement ID" variable. Without one, G-XXXXXXXXXX is used; change it in GTM after importing.')) ?>
+                    <a href="<?= $escaper->escapeUrl($block->getConfigUrl()) ?>"><?= $escaper->escapeHtml(__('Settings')) ?></a>
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="action-primary" style="margin-top: 1rem"><span><?= $escaper->escapeHtml(__('Download GTM Container JSON')) ?></span></button>
+    </form>
+
+    <h2 class="page-title" style="font-size: 2rem; margin-top: 3rem"><?= $escaper->escapeHtml(__('What is inside')) ?></h2>
+    <table class="data-grid" style="margin-bottom: 2rem">
+        <thead><tr><th class="data-grid-th"><?= $escaper->escapeHtml(__('Type')) ?></th><th class="data-grid-th"><?= $escaper->escapeHtml(__('Name')) ?></th><th class="data-grid-th"><?= $escaper->escapeHtml(__('Fires on')) ?></th></tr></thead>
+        <tbody>
+            <tr><td><?= $escaper->escapeHtml(__('Tag')) ?></td><td>GA4 - Google tag</td><td>Initialization - All Pages</td></tr>
+            <tr><td><?= $escaper->escapeHtml(__('Tag')) ?></td><td>GA4 - Ecommerce events</td><td><?= $escaper->escapeHtml(implode(', ', $block->getEcommerceEvents())) ?></td></tr>
+            <tr><td><?= $escaper->escapeHtml(__('Tag')) ?></td><td>GA4 - login and sign_up</td><td>login, sign_up (method)</td></tr>
+            <tr><td><?= $escaper->escapeHtml(__('Tag')) ?></td><td>GA4 - search</td><td>search (search_term)</td></tr>
+            <tr><td><?= $escaper->escapeHtml(__('Trigger')) ?></td><td>CE - softaware_consent_update</td><td><?= $escaper->escapeHtml(__('For your own tags that should wait for Softaware Cookie Consent')) ?></td></tr>
+            <tr><td><?= $escaper->escapeHtml(__('Variables')) ?></td><td colspan="2">Const - GA4 Measurement ID, DLV - method, DLV - search_term, DLV - user_data, DLV - sw_consent.analytics, DLV - sw_consent.marketing</td></tr>
+        </tbody>
+    </table>
+
+    <h2 class="page-title" style="font-size: 2rem"><?= $escaper->escapeHtml(__('How to import')) ?></h2>
+    <ol style="margin-left: 2rem; line-height: 1.8">
+        <li><?= $escaper->escapeHtml(__('In Google Tag Manager open Admin > Import Container and choose the downloaded file.')) ?></li>
+        <li><?= $escaper->escapeHtml(__('Choose your workspace, then "Merge" and "Rename conflicting tags, triggers and variables".')) ?></li>
+        <li><?= $escaper->escapeHtml(__('Check the measurement ID in "Const - GA4 Measurement ID", preview the container on your shop, then publish.')) ?></li>
+        <li><?= $escaper->escapeHtml(__('Enhanced conversions: in the "GA4 - Google tag" tag, add a User-Provided Data variable that reads "DLV - user_data" (only if Enhanced Conversions is enabled in the settings).')) ?></li>
+    </ol>
+    <p><?= $escaper->escapeHtml(__('Refunds are not part of the container: they are sent from the server with the Measurement Protocol (see Settings > Refunds).')) ?></p>
+</div>

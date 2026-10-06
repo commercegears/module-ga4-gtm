@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Customer:etc/sections.xsd">
+    <action name="checkout/cart/add"><section name="softaware-ga4"/></action>
+    <action name="checkout/cart/addgroup"><section name="softaware-ga4"/></action>
+    <action name="checkout/cart/delete"><section name="softaware-ga4"/></action>
+    <action name="checkout/cart/updatePost"><section name="softaware-ga4"/></action>
+    <action name="checkout/cart/updateItemOptions"><section name="softaware-ga4"/></action>
+    <action name="checkout/cart/updateItemQty"><section name="softaware-ga4"/></action>
+    <action name="checkout/sidebar/removeItem"><section name="softaware-ga4"/></action>
+    <action name="checkout/sidebar/updateItemQty"><section name="softaware-ga4"/></action>
+    <action name="wishlist/index/cart"><section name="softaware-ga4"/></action>
+    <action name="wishlist/index/allcart"><section name="softaware-ga4"/></action>
+    <action name="sales/order/reorder"><section name="softaware-ga4"/></action>
+    <action name="customer/account/loginPost"><section name="softaware-ga4"/></action>
+    <action name="customer/account/createPost"><section name="softaware-ga4"/></action>
+    <action name="customer/ajax/login"><section name="softaware-ga4"/></action>
+</config>

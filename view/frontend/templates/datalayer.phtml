@@ -1,0 +1,15 @@
+<?php
+/**
+ * Copyright © Softaware Commerce. All rights reserved.
+ * Page-level GA4 data (read by ga4.js, which works on Luma and Hyvä).
+ */
+declare(strict_types=1);
+
+use Magento\Framework\Escaper;
+use Softaware\Ga4\Block\DataLayer;
+
+/** @var DataLayer $block */
+/** @var Escaper $escaper */
+?>
+<script type="application/json" id="sw-ga4-data"><?= /* @noEscape */ $block->getPayloadJson() ?></script>
+<script src="<?= $escaper->escapeUrl($block->getScriptUrl()) ?>"></script>

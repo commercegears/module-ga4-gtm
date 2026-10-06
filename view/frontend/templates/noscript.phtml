@@ -1,0 +1,16 @@
+<?php
+/**
+ * Copyright © Softaware Commerce. All rights reserved.
+ */
+declare(strict_types=1);
+
+use Magento\Framework\Escaper;
+use Softaware\Ga4\Block\Tag;
+
+/** @var Tag $block */
+/** @var Escaper $escaper */
+if (!$block->showNoscript()) {
+    return;
+}
+?>
+<noscript><iframe src="<?= $escaper->escapeUrl($block->getNoscriptUrl()) ?>" height="0" width="0" style="display:none;visibility:hidden" title="Google Tag Manager"></iframe></noscript>

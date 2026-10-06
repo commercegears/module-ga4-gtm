@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="head.additional">
+            <block class="Softaware\Ga4\Block\Tag" name="softaware.ga4.head" template="Softaware_Ga4::head.phtml" before="-"/>
+        </referenceBlock>
+        <referenceContainer name="after.body.start">
+            <block class="Softaware\Ga4\Block\Tag" name="softaware.ga4.noscript" template="Softaware_Ga4::noscript.phtml" before="-"/>
+        </referenceContainer>
+        <referenceContainer name="before.body.end">
+            <block class="Softaware\Ga4\Block\DataLayer" name="softaware.ga4.datalayer" after="-">
+                <arguments>
+                    <argument name="providers" xsi:type="array"/>
+                </arguments>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

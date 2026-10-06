@@ -1,0 +1,34 @@
+{
+    "name": "softaware/module-ga4-gtm",
+    "description": "Google Tag Manager / gtag.js with GA4 ecommerce dataLayer events (Luma and Hyvä), Consent Mode support, Measurement Protocol refunds and a ready-to-import GTM container.",
+    "type": "magento2-module",
+    "license": "proprietary",
+    "require": {
+        "php": "~8.2.0||~8.3.0||~8.4.0||~8.5.0",
+        "magento/framework": "~103.0.7",
+        "softaware/module-base": "^1.2",
+        "magento/module-backend": "*",
+        "magento/module-catalog": "*",
+        "magento/module-checkout": "*",
+        "magento/module-config": "*",
+        "magento/module-csp": "*",
+        "magento/module-customer": "*",
+        "magento/module-quote": "*",
+        "magento/module-sales": "*",
+        "magento/module-search": "*",
+        "magento/module-store": "*",
+        "magento/module-tax": "*"
+    },
+    "suggest": {
+        "softaware/module-cookie-consent": "Consent banner with Google Consent Mode v2; this module then waits for it automatically",
+        "hyva-themes/magento2-default-theme": "Hyvä storefront support (no extra compatibility module needed)"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Softaware\\Ga4\\": ""
+        }
+    }
+}

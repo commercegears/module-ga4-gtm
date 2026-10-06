@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="softaware_ga4_order" resource="default" engine="innodb" comment="Softaware GA4: per-order tracking state">
+        <column xsi:type="int" name="order_id" unsigned="true" nullable="false" comment="Order entity id"/>
+        <column xsi:type="varchar" name="ga_client_id" nullable="true" length="64" comment="GA client id from the _ga cookie"/>
+        <column xsi:type="varchar" name="ga_session_id" nullable="true" length="32" comment="GA4 session id"/>
+        <column xsi:type="timestamp" name="purchase_tracked_at" nullable="true" comment="When the purchase event was output"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created at"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="order_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="SOFTAWARE_GA4_ORDER_ORDER_ID_SALES_ORDER_ENTITY_ID"
+                    table="softaware_ga4_order" column="order_id" referenceTable="sales_order" referenceColumn="entity_id" onDelete="CASCADE"/>
+    </table>
+    <table name="softaware_ga4_refund" resource="default" engine="innodb" comment="Softaware GA4: refund events waiting for / sent via Measurement Protocol">
+        <column xsi:type="int" name="refund_id" unsigned="true" nullable="false" identity="true" comment="Refund queue id"/>
+        <column xsi:type="int" name="order_id" unsigned="true" nullable="false" comment="Order entity id"/>
+        <column xsi:type="int" name="creditmemo_id" unsigned="true" nullable="false" comment="Credit memo entity id"/>
+        <column xsi:type="smallint" name="store_id" unsigned="true" nullable="false" default="0" comment="Store id"/>
+        <column xsi:type="mediumtext" name="payload" nullable="false" comment="Refund event params (JSON)"/>
+        <column xsi:type="varchar" name="status" nullable="false" length="16" default="pending" comment="pending, sent, failed"/>
+        <column xsi:type="smallint" name="attempts" unsigned="true" nullable="false" default="0" comment="Send attempts"/>
+        <column xsi:type="text" name="last_error" nullable="true" comment="Last error"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created at"/>
+        <column xsi:type="timestamp" name="sent_at" nullable="true" comment="Sent at"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="refund_id"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="SOFTAWARE_GA4_REFUND_CREDITMEMO_ID">
+            <column name="creditmemo_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="SOFTAWARE_GA4_REFUND_CREDITMEMO_ID_SALES_CREDITMEMO_ENTITY_ID"
+                    table="softaware_ga4_refund" column="creditmemo_id" referenceTable="sales_creditmemo" referenceColumn="entity_id" onDelete="CASCADE"/>
+        <index referenceId="SOFTAWARE_GA4_REFUND_STATUS" indexType="btree">
+            <column name="status"/>
+        </index>
+    </table>
+</schema>

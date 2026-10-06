@@ -1,0 +1,14 @@
+<?php
+/**
+ * Copyright © Softaware Commerce. All rights reserved.
+ * Google Tag Manager or gtag.js loader. Consent Mode defaults come earlier from Softaware_CookieConsent when enabled.
+ */
+declare(strict_types=1);
+
+use Magento\Framework\View\Helper\SecureHtmlRenderer;
+use Softaware\Ga4\Block\Tag;
+
+/** @var Tag $block */
+/** @var SecureHtmlRenderer $secureRenderer */
+?>
+<?= /* @noEscape */ $secureRenderer->renderTag('script', ['data-sw-ga4' => 'loader'], $block->getHeadScript(), false) ?>

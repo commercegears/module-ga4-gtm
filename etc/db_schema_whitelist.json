@@ -1,0 +1,37 @@
+{
+    "softaware_ga4_order": {
+        "column": {
+            "order_id": true,
+            "ga_client_id": true,
+            "ga_session_id": true,
+            "purchase_tracked_at": true,
+            "created_at": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "SOFTAWARE_GA4_ORDER_ORDER_ID_SALES_ORDER_ENTITY_ID": true
+        }
+    },
+    "softaware_ga4_refund": {
+        "column": {
+            "refund_id": true,
+            "order_id": true,
+            "creditmemo_id": true,
+            "store_id": true,
+            "payload": true,
+            "status": true,
+            "attempts": true,
+            "last_error": true,
+            "created_at": true,
+            "sent_at": true
+        },
+        "index": {
+            "SOFTAWARE_GA4_REFUND_STATUS": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "SOFTAWARE_GA4_REFUND_CREDITMEMO_ID": true,
+            "SOFTAWARE_GA4_REFUND_CREDITMEMO_ID_SALES_CREDITMEMO_ENTITY_ID": true
+        }
+    }
+}
