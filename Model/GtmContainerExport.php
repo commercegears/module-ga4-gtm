@@ -17,7 +17,7 @@ class GtmContainerExport
 {
     public const ECOMMERCE_EVENTS = [
         'view_item_list', 'select_item', 'view_item', 'add_to_cart', 'remove_from_cart', 'view_cart',
-        'begin_checkout', 'add_shipping_info', 'add_payment_info', 'purchase',
+        'begin_checkout', 'add_shipping_info', 'add_payment_info', 'purchase', 'add_to_wishlist',
     ];
     public const ACCOUNT_EVENTS = ['login', 'sign_up'];
 

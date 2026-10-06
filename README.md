@@ -8,7 +8,8 @@ server-side refunds and a GTM container you can import in one step.
 ## Features
 
 - **Tags**: GTM container snippet in `<head>` plus `<noscript>` iframe after `<body>`, or gtag.js with a GA4
-  measurement ID. Custom GTM script domain for server-side tagging.
+  measurement ID. Custom GTM script domain for server-side tagging. The `<noscript>` iframe is left out while
+  Softaware Cookie Consent is active, because visitors without JavaScript cannot give consent.
 - **Consent**: with *Softaware Cookie Consent* enabled the Consent Mode defaults come from that module (printed before
   the tag) and nothing else is needed. Without it you can set the defaults here (denied / granted / leave to your consent
   tool). Optionally load GTM/gtag only after the visitor accepts "Analytics" or "Marketing" (needs Softaware Cookie Consent).
@@ -25,6 +26,7 @@ server-side refunds and a GTM container you can import in one step.
   | add_shipping_info / add_payment_info | Luma checkout (also used by Hyvä) | RequireJS mixins |
   | purchase | order success page, once per order | page data + DB flag |
   | refund | credit memo | Measurement Protocol, cron |
+  | add_to_wishlist | product added to the wish list (Luma and Hyvä) | customer-data section |
   | login / sign_up / search | login, registration, search results | section / page data |
 
   Items carry `item_id` (SKU or product ID), `item_name`, `item_brand`, `item_category`…`item_category5`,
@@ -33,7 +35,11 @@ server-side refunds and a GTM container you can import in one step.
 - **No double counting**: cart changes are detected server-side by comparing each cart line with its stored quantity
   (so AJAX and full-page adds are counted once, and a guest cart merged at login is not counted). Events are delivered
   through the private customer-data section `softaware-ga4` (full-page cache safe) and every event has an id that the
-  browser remembers. Purchase is flagged in `softaware_ga4_order` and never output twice.
+  browser remembers. Purchase is flagged in `softaware_ga4_order` and never output twice. Cart events use the cart's
+  own currency; lines with a custom price (for example free gifts) are reported at that price, even when it is 0.
+- **Refunds**: the refund value follows the same "incl. tax / incl. shipping" settings as the purchase value, so a full
+  refund cancels the purchase revenue exactly. Each queued refund is claimed before it is sent, so cron and
+  `softaware:ga4:refunds --send` running at the same time cannot send it twice.
 - **GTM container export**: *Softaware > GA4 & GTM > GTM Container Export* downloads a container with a Google tag,
   GA4 event tags, custom event triggers and variables. Import with *Merge*. Also `bin/magento softaware:ga4:gtm-export`.
 - **Debug mode**: logs every push to the browser console (`[Softaware GA4] event`) and sets `debug_mode` for gtag.js.

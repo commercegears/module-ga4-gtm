@@ -1,5 +1,24 @@
 # Changelog
 
+## 1.1.0 (2026-10-06)
+
+### Added
+- `add_to_wishlist` event (Luma and Hyvä), delivered through the customer-data section; included in the GTM
+  container export.
+
+### Fixed
+- Refund value now follows *Purchase Value Includes Tax / Shipping*, like the purchase event. Before, refunds always
+  sent the credit memo grand total, so with tax or shipping excluded a full refund made revenue negative.
+- A queued refund could be sent twice when cron and `softaware:ga4:refunds --send` ran at the same time; it is now
+  claimed (optimistic lock on the attempt counter) before it is sent.
+- Cart events (add_to_cart, remove_from_cart, view_cart, begin_checkout) use the cart's currency instead of the
+  session's display currency.
+- Cart lines with a custom price of 0 (free gifts) were reported at the catalogue price in add_to_cart.
+
+### Security / privacy
+- The GTM `<noscript>` iframe is no longer printed while Softaware Cookie Consent is active: without JavaScript a
+  visitor cannot consent, so GTM must not load.
+
 ## 1.0.0
 
 - Google Tag Manager (head + noscript, optional server-side tagging domain) or gtag.js with a GA4 measurement ID.
