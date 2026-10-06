@@ -59,11 +59,24 @@ class RefundQueue
         );
     }
 
+    /**
+     * Takes one attempt at a queued refund. Returns false when another process (cron and the CLI at the same time)
+     * already took it, so a refund is never sent twice.
+     */
+    public function claim(int $refundId, int $attempts): bool
+    {
+        return $this->resource->getConnection()->update(
+            $this->resource->getTableName(self::TABLE),
+            ['attempts' => $attempts + 1],
+            ['refund_id = ?' => $refundId, 'attempts = ?' => $attempts, 'status IN (?)' => ['pending', 'failed']]
+        ) === 1;
+    }
+
     public function markSent(int $refundId): void
     {
         $this->resource->getConnection()->update(
             $this->resource->getTableName(self::TABLE),
-            ['status' => 'sent', 'sent_at' => gmdate('Y-m-d H:i:s'), 'last_error' => null, 'attempts' => new \Magento\Framework\DB\Sql\Expression('attempts + 1')],
+            ['status' => 'sent', 'sent_at' => gmdate('Y-m-d H:i:s'), 'last_error' => null],
             ['refund_id = ?' => $refundId]
         );
     }
@@ -72,7 +85,7 @@ class RefundQueue
     {
         $this->resource->getConnection()->update(
             $this->resource->getTableName(self::TABLE),
-            ['status' => 'failed', 'last_error' => mb_substr($error, 0, 2000), 'attempts' => new \Magento\Framework\DB\Sql\Expression('attempts + 1')],
+            ['status' => 'failed', 'last_error' => mb_substr($error, 0, 2000)],
             ['refund_id = ?' => $refundId]
         );
     }

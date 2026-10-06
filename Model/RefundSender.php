@@ -55,6 +55,10 @@ class RefundSender
                 $output && $output(sprintf('#%d client_id=%s %s', $refundId, $clientId, $this->json->serialize($events)));
                 continue;
             }
+            if (!$this->queue->claim($refundId, (int)$row['attempts'])) {
+                $result['skipped']++;
+                continue;
+            }
             try {
                 $this->client->send($storeId, $clientId, $events);
                 $this->queue->markSent($refundId);

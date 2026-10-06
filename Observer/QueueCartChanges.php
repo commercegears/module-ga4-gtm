@@ -69,7 +69,7 @@ class QueueCartChanges implements ObserverInterface
                     $removed[] = $entry;
                 }
             }
-            $currency = $this->itemBuilder->getCurrency((int)$quote->getStoreId());
+            $currency = $this->itemBuilder->getQuoteCurrency($quote);
             if ($added) {
                 $this->queue->add('add_to_cart', [
                     'currency' => $currency,

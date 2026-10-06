@@ -39,6 +39,18 @@ class ItemBuilder
     }
 
     /**
+     * Currency of a cart's amounts (the quote currency, or the base currency when configured).
+     */
+    public function getQuoteCurrency(\Magento\Quote\Model\Quote $quote): string
+    {
+        $storeId = (int)$quote->getStoreId();
+        $code = $this->config->useBaseCurrency($storeId)
+            ? (string)$quote->getBaseCurrencyCode()
+            : (string)$quote->getQuoteCurrencyCode();
+        return $code !== '' ? $code : $this->getCurrency($storeId);
+    }
+
+    /**
      * @param Product[] $products
      */
     public function preloadProducts(array $products, int $storeId): void
@@ -101,7 +113,9 @@ class ItemBuilder
         $unit = $inclTax
             ? (float)($base ? $item->getBasePriceInclTax() : $item->getPriceInclTax())
             : (float)($base ? $item->getBaseCalculationPrice() : $item->getCalculationPrice());
-        if ($unit <= 0.0 && $product) {
+        // Totals not collected yet (new line): fall back to the catalogue price, unless a custom price was set
+        // on purpose (free gifts, price overrides) - then that price is the real one, even when it is 0.
+        if ($unit <= 0.0 && $product && $item->getCustomPrice() === null) {
             $unit = $this->productPrice($product, $storeId);
         }
         $discount = (float)($base ? $item->getBaseDiscountAmount() : $item->getDiscountAmount()) / $qty;

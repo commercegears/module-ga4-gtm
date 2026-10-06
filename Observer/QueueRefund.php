@@ -51,12 +51,26 @@ class QueueRefund implements ObserverInterface
                 }
                 $items[] = $this->itemBuilder->fromCreditmemoItem($item, $base);
             }
+            // Same rules as the purchase value, so a full refund cancels the purchase revenue exactly.
+            $inclTax = $this->config->isValueInclTax($storeId);
+            $inclShipping = $this->config->isValueInclShipping($storeId);
+            $grandTotal = (float)($base ? $creditmemo->getBaseGrandTotal() : $creditmemo->getGrandTotal());
+            $tax = (float)($base ? $creditmemo->getBaseTaxAmount() : $creditmemo->getTaxAmount());
+            $shipping = (float)($base ? $creditmemo->getBaseShippingAmount() : $creditmemo->getShippingAmount());
+            $shippingInclTax = (float)($base ? $creditmemo->getBaseShippingInclTax() : $creditmemo->getShippingInclTax());
+            $value = $grandTotal;
+            if (!$inclShipping) {
+                $value -= $inclTax ? $shippingInclTax : $shipping;
+            }
+            if (!$inclTax) {
+                $value -= $tax;
+            }
             $params = [
                 'currency' => $base ? (string)$order->getBaseCurrencyCode() : (string)$order->getOrderCurrencyCode(),
                 'transaction_id' => (string)$order->getIncrementId(),
-                'value' => round((float)($base ? $creditmemo->getBaseGrandTotal() : $creditmemo->getGrandTotal()), 2),
-                'tax' => round((float)($base ? $creditmemo->getBaseTaxAmount() : $creditmemo->getTaxAmount()), 2),
-                'shipping' => round((float)($base ? $creditmemo->getBaseShippingAmount() : $creditmemo->getShippingAmount()), 2),
+                'value' => round(max(0.0, $value), 2),
+                'tax' => round($tax, 2),
+                'shipping' => round($inclTax ? $shippingInclTax : $shipping, 2),
                 'affiliation' => $this->config->getAffiliation($storeId),
             ];
             if ($items) {

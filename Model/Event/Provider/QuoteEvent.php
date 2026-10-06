@@ -43,7 +43,7 @@ class QuoteEvent implements PageEventProviderInterface
             $items[] = $this->itemBuilder->fromQuoteItem($item);
         }
         $params = [
-            'currency' => $this->itemBuilder->getCurrency($storeId),
+            'currency' => $this->itemBuilder->getQuoteCurrency($quote),
             'value' => $this->itemBuilder->sumValue($items),
         ];
         if ($quote->getCouponCode()) {

@@ -50,9 +50,13 @@ class Tag extends Template
         return $this->config->getMeasurementId();
     }
 
+    /**
+     * The GTM <noscript> iframe loads Google Tag Manager without JavaScript, so a visitor can never give or refuse
+     * consent: it is left out while Softaware Cookie Consent is active.
+     */
     public function showNoscript(): bool
     {
-        return $this->isActive() && $this->getMode() === Config::MODE_GTM && $this->config->getLoadAfterConsent() === '';
+        return $this->isActive() && $this->getMode() === Config::MODE_GTM && !$this->config->isCookieConsentActive();
     }
 
     /**
