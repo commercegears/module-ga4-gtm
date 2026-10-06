@@ -2,7 +2,7 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
     <menu>
         <add id="Softaware_Ga4::main" title="GA4 &amp; GTM" translate="title" module="Softaware_Ga4"
-             sortOrder="35" parent="Softaware_Base::base" resource="Softaware_Ga4::main"/>
+             sortOrder="35" parent="Softaware_Core::core" resource="Softaware_Ga4::main"/>
         <add id="Softaware_Ga4::export" title="GTM Container Export" translate="title" module="Softaware_Ga4"
              sortOrder="10" parent="Softaware_Ga4::main" action="swga4/export/index" resource="Softaware_Ga4::export"/>
         <add id="Softaware_Ga4::config" title="Settings" translate="title" module="Softaware_Ga4"

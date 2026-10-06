@@ -3,8 +3,7 @@
     <acl>
         <resources>
             <resource id="Magento_Backend::admin">
-                <!-- Title repeated here: Softaware_Base ships its acl.xml in etc/adminhtml/, which Magento does not read. -->
-                <resource id="Softaware_Base::base" title="Softaware" translate="title" sortOrder="50">
+                <resource id="Softaware_Core::core" title="Softaware" translate="title" sortOrder="50">
                     <resource id="Softaware_Ga4::main" title="GA4 &amp; GTM" translate="title" sortOrder="35">
                         <resource id="Softaware_Ga4::export" title="GTM Container Export" translate="title" sortOrder="10"/>
                         <resource id="Softaware_Ga4::config" title="GA4 &amp; GTM Settings" translate="title" sortOrder="20"/>

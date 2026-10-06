@@ -74,7 +74,7 @@ ACL: `Softaware_Ga4::export`, `Softaware_Ga4::config`.
 ## Compatibility
 
 Magento Open Source / Adobe Commerce 2.4.7–2.4.9, PHP 8.2–8.5, Luma/Blank and Hyvä 1.3+ (no compatibility module
-needed; the Hyvä checkout uses the Luma checkout). Requires `softaware/module-base`. Works with or without
+needed; the Hyvä checkout uses the Luma checkout). Requires `softaware/module-core`. Works with or without
 `softaware/module-cookie-consent`.
 
 ## Limitations
