@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.2.1 (2026-10-07)
+
+### Changed
+
+- GTM Container Export page: the download form is a standard admin fieldset (label beside the store selector, button
+  aligned with the field), section headings and the event table use the admin styles from a small module CSS file
+  instead of inline styles, and a notice explains when no store view has the module enabled or a store view uses
+  gtag.js (where the container is not needed).
+- Settings: every field has a short comment with its default (Enabled, Currency, Item Prices Include Tax, Send
+  Refunds and others), and the measurement ID comment says where to find it.
+
 ## 1.2.0 (2026-10-06)
 
 ### Changed
