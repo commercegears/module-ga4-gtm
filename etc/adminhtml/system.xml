@@ -8,8 +8,9 @@
             <resource>Softaware_Ga4::config</resource>
             <group id="general" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>General</label>
-                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Enabled</label>
+                    <comment>Adds the tag and the ecommerce events to the storefront. Default: No.</comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="mode" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
@@ -19,7 +20,7 @@
                 </field>
                 <field id="gtm_id" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>GTM Container ID</label>
-                    <comment>For example GTM-AB12CDE.</comment>
+                    <comment>For example GTM-AB12CDE. Find it at the top of your Google Tag Manager workspace.</comment>
                     <backend_model>Softaware\Ga4\Model\Config\Backend\GtmId</backend_model>
                     <depends>
                         <field id="mode">gtm</field>
@@ -35,12 +36,12 @@
                 </field>
                 <field id="measurement_id" translate="label comment" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>GA4 Measurement ID</label>
-                    <comment>For example G-AB12CD34EF. Required for gtag.js and Measurement Protocol refunds; also written into the GTM container export.</comment>
+                    <comment>For example G-AB12CD34EF (GA4 Admin &gt; Data streams). Required for gtag.js and refunds; also written into the GTM container export.</comment>
                     <backend_model>Softaware\Ga4\Model\Config\Backend\MeasurementId</backend_model>
                 </field>
                 <field id="load_after_consent" translate="label comment" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Load Tags</label>
-                    <comment>"Immediately" relies on Google Consent Mode (recommended). The other options need Softaware Cookie Consent and load GTM / gtag.js only after the visitor accepts that category; they are ignored when Cookie Consent is disabled.</comment>
+                    <comment>Default: Immediately, with Google Consent Mode (recommended). The other options need Softaware Cookie Consent and load GTM or gtag.js only after the visitor accepts that category; they are ignored when Cookie Consent is disabled.</comment>
                     <source_model>Softaware\Ga4\Model\Config\Source\LoadCondition</source_model>
                 </field>
                 <field id="consent_default" translate="label comment" type="select" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
@@ -63,7 +64,7 @@
                 </field>
                 <field id="brand_attribute" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Brand Attribute</label>
-                    <comment>Fills item_brand.</comment>
+                    <comment>Product attribute for item_brand. Default: Manufacturer.</comment>
                     <source_model>Softaware\Ga4\Model\Config\Source\ProductAttributes</source_model>
                 </field>
                 <field id="default_brand" translate="label comment" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -79,12 +80,14 @@
                     <label>Affiliation</label>
                     <comment>Sent with purchases and items. Empty uses the store view name.</comment>
                 </field>
-                <field id="currency" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <field id="currency" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Currency</label>
+                    <comment>Currency of value, price and tax in all events. Default: the currency the customer sees.</comment>
                     <source_model>Softaware\Ga4\Model\Config\Source\Currency</source_model>
                 </field>
-                <field id="price_incl_tax" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <field id="price_incl_tax" translate="label comment" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Item Prices Include Tax</label>
+                    <comment>Item prices in events include tax. Default: No.</comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="value_incl_tax" translate="label comment" type="select" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
@@ -99,7 +102,7 @@
                 </field>
                 <field id="max_list_items" translate="label comment" type="text" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Maximum Items per view_item_list</label>
-                    <comment>Keeps the dataLayer small on long category pages. GA4 accepts up to 200 items per event.</comment>
+                    <comment>Keeps the dataLayer small on long category pages. Default: 50; GA4 accepts up to 200 items per event.</comment>
                     <validate>validate-digits validate-digits-range digits-range-1-200</validate>
                 </field>
                 <field id="user_data" translate="label comment" type="select" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
@@ -111,8 +114,9 @@
             <group id="measurement_protocol" translate="label comment" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Refunds (Measurement Protocol)</label>
                 <comment>Credit memos are sent to GA4 as refund events from the server by cron, in the background. Uses the GA4 Measurement ID above.</comment>
-                <field id="refund_enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <field id="refund_enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Send Refunds</label>
+                    <comment>Sends a refund event for every credit memo. Needs the GA4 Measurement ID and an API secret. Default: No.</comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="api_secret" translate="label comment" type="obscure" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
