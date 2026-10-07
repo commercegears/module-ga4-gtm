@@ -1,0 +1,9 @@
+/* Softaware_Ga4 admin: GTM Container Export page */
+.sw-ga4-export { max-width: 1000px; }
+.sw-ga4-export__intro { margin: 0 0 2rem; }
+.sw-ga4-export .admin__fieldset { padding: 0; margin: 0 0 3rem; }
+.sw-ga4-export__select { width: 100%; max-width: 480px; }
+.sw-ga4-export__table { margin-bottom: 3rem; }
+.sw-ga4-export__table td { vertical-align: top; }
+.sw-ga4-export__table td:first-child { white-space: nowrap; }
+.sw-ga4-export__steps { margin: 0 0 1.5rem 2rem; line-height: 1.8; }

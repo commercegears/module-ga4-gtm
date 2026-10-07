@@ -54,6 +54,35 @@ class Export extends Template
         return GtmContainerExport::ECOMMERCE_EVENTS;
     }
 
+    /**
+     * Store views where the module is switched on (for the status line above the form).
+     */
+    public function countEnabledStores(): int
+    {
+        $count = 0;
+        foreach ($this->_storeManager->getStores() as $store) {
+            if ($this->config->isEnabled((int)$store->getId())) {
+                $count++;
+            }
+        }
+        return $count;
+    }
+
+    /**
+     * Store views that send events with gtag.js instead of GTM (the container is not used there).
+     */
+    public function countGtagStores(): int
+    {
+        $count = 0;
+        foreach ($this->_storeManager->getStores() as $store) {
+            $id = (int)$store->getId();
+            if ($this->config->isEnabled($id) && $this->config->getMode($id) === Config::MODE_GTAG) {
+                $count++;
+            }
+        }
+        return $count;
+    }
+
     public function getDownloadUrl(): string
     {
         return $this->getUrl('swga4/export/download');
