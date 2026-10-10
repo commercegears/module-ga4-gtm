@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.2.2 (2026-10-10)
+
+### Added - Product listing, FAQ and user guide (docs/)
+
+- `docs/listing.json`, `docs/faq.md`, `docs/user-guide.md` and screenshots in `docs/images/`.
+
 ## 1.2.1 (2026-10-07)
 
 ### Changed

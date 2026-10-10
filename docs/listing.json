@@ -1,0 +1,120 @@
+{
+    "tagline": "GA4 ecommerce tracking for Magento 2 on Luma and Hyvä: a complete dataLayer for Google Tag Manager or gtag.js, Google Consent Mode, server-side refunds and a GTM container you import in one step.",
+    "key_features": [
+        "Google Tag Manager or gtag.js",
+        "All GA4 ecommerce events with full item data",
+        "Luma and Hyvä, no compatibility module",
+        "Cart changes counted once, purchase once per order",
+        "Google Consent Mode, with or without Softaware Cookie Consent",
+        "Refunds sent from the server via the Measurement Protocol",
+        "Ready-to-import GTM container",
+        "Optional enhanced conversions (hashed user_data)"
+    ],
+    "benefits": [
+        {
+            "icon": "chart",
+            "title": "Revenue you can trust",
+            "text": "Cart changes are detected on the server and every event carries an id, so AJAX adds, page reloads and merged carts are not counted twice. Purchase is flagged in the database and never sent again."
+        },
+        {
+            "icon": "bolt",
+            "title": "No tags to build by hand",
+            "text": "Enter your GTM container ID and GA4 measurement ID, download the container from the admin and import it into Google Tag Manager with Merge. The tags, triggers and variables are already built."
+        },
+        {
+            "icon": "shield",
+            "title": "Consent first",
+            "text": "Google Consent Mode defaults are printed before the tag. With Softaware Cookie Consent you can also hold GTM or gtag.js back until the visitor accepts Analytics or Marketing."
+        }
+    ],
+    "showcase": [
+        {
+            "label": "Add to cart",
+            "title": "A real add_to_cart, ready for GA4",
+            "text": "Every cart change pushes add_to_cart or remove_from_cart with currency, value and full item data: item ID, name, brand, up to five category levels, variant, price and quantity.",
+            "image": "docs/images/luma-add-to-cart.png"
+        },
+        {
+            "label": "Hyvä",
+            "title": "Product lists on Hyvä and Luma",
+            "text": "view_item_list for category pages, search results, related, upsell and cross-sell products, with list ID, list name and position. A click on a product in one of these lists sends select_item.",
+            "image": "docs/images/hyva-view-item-list.png"
+        },
+        {
+            "label": "Mobile",
+            "title": "The same data on every device",
+            "text": "Events come from the page data and the private customer-data section, so they are the same on phones and desktops and safe with the full-page cache.",
+            "image": "docs/images/mobile-hyva-view-item.png"
+        },
+        {
+            "label": "Settings",
+            "title": "Tag, consent and debug in one place",
+            "text": "Choose Google Tag Manager or gtag.js, set the container ID, a custom script domain for server-side tagging, the GA4 measurement ID, when tags load and the Consent Mode defaults.",
+            "image": "docs/images/admin-settings.png"
+        },
+        {
+            "label": "Ecommerce data",
+            "title": "Item data that matches your feed",
+            "text": "SKU or product ID as item_id, the brand attribute, category path, affiliation, currency, and whether prices and the purchase value include tax and shipping.",
+            "image": "docs/images/admin-ecommerce-data.png"
+        },
+        {
+            "label": "GTM container",
+            "title": "Import the tags instead of building them",
+            "text": "Softaware > GA4 & GTM > GTM Container Export downloads a container JSON with a Google tag, GA4 event tags, triggers and variables for every event the module sends.",
+            "image": "docs/images/gtm-export.png"
+        }
+    ],
+    "feature_groups": [
+        {
+            "title": "Events",
+            "items": [
+                "view_item_list and select_item (category, search, related, upsell, cross-sell)",
+                "view_item, add_to_cart, remove_from_cart, add_to_wishlist",
+                "view_cart, begin_checkout, add_shipping_info, add_payment_info",
+                "purchase (once per order) and refund (server-side)",
+                "login, sign_up and search"
+            ]
+        },
+        {
+            "title": "Tags and consent",
+            "items": [
+                "GTM snippet in the head plus noscript iframe, or gtag.js",
+                "Custom GTM script domain for server-side tagging",
+                "Consent Mode defaults: from Softaware Cookie Consent, denied, granted or left to your consent tool",
+                "Load tags only after Analytics or Marketing consent (with Softaware Cookie Consent)",
+                "Debug mode: console log of every push and GA4 DebugView"
+            ]
+        },
+        {
+            "title": "Data quality",
+            "items": [
+                "Cart changes compared with the stored quantity per line",
+                "Event ids remembered in the browser, no double pushes",
+                "Purchase flagged per order in the database",
+                "Refund value follows the purchase value rules (tax, shipping)",
+                "Free gifts and custom prices reported at the cart price"
+            ]
+        },
+        {
+            "title": "Admin and developers",
+            "items": [
+                "Settings per website and store view",
+                "GTM container export in the admin and on the CLI",
+                "CLI: list, dry-run and send queued refunds",
+                "window.swGa4.push() and a server-side event queue for your own events",
+                "Separate ACL permissions for settings and export"
+            ]
+        }
+    ],
+    "demo": {
+        "storefront": [],
+        "admin": [
+            {
+                "label": "Admin panel",
+                "url": "https://demo.softawarecommerce.com/try-admin/ga4-gtm",
+                "image": "docs/images/admin-settings.png"
+            }
+        ]
+    }
+}

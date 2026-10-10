@@ -5,6 +5,8 @@
 GA4 ecommerce tracking for Luma and Hyvä: Google Tag Manager or gtag.js, a complete GA4 dataLayer, Google Consent Mode,
 server-side refunds and a GTM container you can import in one step.
 
+Documentation: [User guide](docs/user-guide.md) · [FAQ](docs/faq.md)
+
 ## Features
 
 - **Tags**: GTM container snippet in `<head>` plus `<noscript>` iframe after `<body>`, or gtag.js with a GA4
