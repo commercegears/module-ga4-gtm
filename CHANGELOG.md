@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.2.4 (2026-10-11)
+- Improvement: live demo links for the Luma and Hyvä storefront, with a guided tour of the events.
+
 ## 1.2.3 (2026-10-11)
 - Fix: GTM container export reports an unknown store view instead of silently using the default settings.
 - Improvement: the placeholder IDs GTM-XXXXXXX and G-XXXXXXXXXX are refused when entered.
