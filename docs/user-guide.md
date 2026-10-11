@@ -72,9 +72,9 @@ and per store view.
 | --- | --- |
 | Enabled | Adds the tag and the ecommerce events to the storefront. Default: No. |
 | Tag Type | **Google Tag Manager**: events go to the dataLayer for your GTM tags. **gtag.js (GA4 directly)**: events are sent straight to GA4. |
-| GTM Container ID | For example GTM-AB12CDE (top of your GTM workspace). Shown for Google Tag Manager only. |
+| GTM Container ID | For example GTM-AB12CDE (top of your GTM workspace). Shown for Google Tag Manager only. The placeholder GTM-XXXXXXX is refused. |
 | GTM Script Domain | Change only for server-side tagging (for example https://sgtm.example.com). Default: https://www.googletagmanager.com |
-| GA4 Measurement ID | For example G-AB12CD34EF (GA4 Admin > Data streams). Required for gtag.js and refunds; also written into the GTM container export. |
+| GA4 Measurement ID | For example G-AB12CD34EF (GA4 Admin > Data streams). Required for gtag.js and refunds; also written into the GTM container export. The placeholder G-XXXXXXXXXX is refused. |
 | Load Tags | **Immediately (Google Consent Mode)** (default), **After "Analytics" consent** or **After "Marketing" consent**. The two "after" options need Softaware Cookie Consent and are ignored when it is disabled. |
 | Consent Mode Defaults (Without Softaware Cookie Consent) | **Do not set (consent tool sets them)**, **Denied until updated** or **Granted (no consent required)**. Only used when Softaware Cookie Consent is not enabled. |
 | Debug Mode | Logs every event to the browser console and adds debug_mode so events show in GA4 DebugView. Switch off on live stores. |
@@ -178,7 +178,7 @@ refund is claimed before it is sent, so cron and the CLI cannot send it twice.
 | `bin/magento softaware:ga4:refunds` | Lists queued refunds. |
 | `bin/magento softaware:ga4:refunds --dry-run` | Prints the Measurement Protocol payloads without sending them. |
 | `bin/magento softaware:ga4:refunds --send` | Sends pending refunds now (cron does this every five minutes). |
-| `bin/magento softaware:ga4:gtm-export [--store=default] [--output=container.json]` | Writes the GTM container JSON, using the measurement ID of that store view. |
+| `bin/magento softaware:ga4:gtm-export [--store=default] [--output=container.json]` | Writes the GTM container JSON, using the measurement ID of that store view. An unknown store view is an error. |
 
 ## 9. For developers
 

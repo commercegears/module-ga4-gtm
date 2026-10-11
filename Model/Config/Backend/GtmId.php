@@ -21,6 +21,10 @@ class GtmId extends Value
         if ($value !== '' && !preg_match('/^GTM-[A-Z0-9]{4,12}$/', $value)) {
             throw new LocalizedException(__('"%1" is not a GTM container ID (format GTM-XXXXXXX).', $value));
         }
+        // The example ID is refused when typed in; one saved before is kept, so other fields can still be saved.
+        if (preg_match('/^GTM-X+$/', $value) && $value !== strtoupper((string)$this->getOldValue())) {
+            throw new LocalizedException(__('"%1" is the example from the instructions. Enter the ID of your GTM container.', $value));
+        }
         $this->setValue($value);
         return parent::beforeSave();
     }

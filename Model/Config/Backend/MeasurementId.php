@@ -21,6 +21,10 @@ class MeasurementId extends Value
         if ($value !== '' && !preg_match('/^G-[A-Z0-9]{4,15}$/', $value)) {
             throw new LocalizedException(__('"%1" is not a GA4 measurement ID (format G-XXXXXXXXXX).', $value));
         }
+        // The example ID is refused when typed in; one saved before is kept, so other fields can still be saved.
+        if (preg_match('/^G-X+$/', $value) && $value !== strtoupper((string)$this->getOldValue())) {
+            throw new LocalizedException(__('"%1" is the example from the instructions. Enter the measurement ID of your GA4 data stream.', $value));
+        }
         $this->setValue($value);
         return parent::beforeSave();
     }

@@ -70,6 +70,7 @@
                 <field id="default_brand" translate="label comment" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Default Brand</label>
                     <comment>Used when the product has no brand value. Leave empty to omit item_brand.</comment>
+                    <validate>validate-no-html-tags maximum-length-100</validate>
                 </field>
                 <field id="category_path" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Item Categories</label>
@@ -79,6 +80,7 @@
                 <field id="affiliation" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Affiliation</label>
                     <comment>Sent with purchases and items. Empty uses the store view name.</comment>
+                    <validate>validate-no-html-tags maximum-length-100</validate>
                 </field>
                 <field id="currency" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Currency</label>

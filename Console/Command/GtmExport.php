@@ -6,6 +6,7 @@ declare(strict_types=1);
 
 namespace Softaware\Ga4\Console\Command;
 
+use Magento\Framework\Exception\LocalizedException;
 use Softaware\Ga4\Model\GtmContainerExport;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -34,7 +35,12 @@ class GtmExport extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $json = $this->export->toJson($input->getOption('store'));
+        try {
+            $json = $this->export->toJson($input->getOption('store'));
+        } catch (LocalizedException $e) {
+            $output->writeln('<error>' . $e->getMessage() . '</error>');
+            return Command::FAILURE;
+        }
         $file = $input->getOption('output');
         if ($file) {
             if (@file_put_contents((string)$file, $json) === false) {

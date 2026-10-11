@@ -1,58 +1,29 @@
 # Changelog
 
+## 1.2.3 (2026-10-11)
+- GTM container export: an unknown store view is reported instead of silently using the default settings.
+- The placeholder IDs GTM-XXXXXXX and G-XXXXXXXXXX are refused when entered.
+- Default Brand and Affiliation accept plain text only (up to 100 characters), checked on the server.
+- Requires Softaware Core 1.3.
+
 ## 1.2.2 (2026-10-10)
-
-### Added - Product listing, FAQ and user guide (docs/)
-
-- `docs/listing.json`, `docs/faq.md`, `docs/user-guide.md` and screenshots in `docs/images/`.
+- Product listing, FAQ, user guide and screenshots.
 
 ## 1.2.1 (2026-10-07)
-
-### Changed
-
-- GTM Container Export page: the download form is a standard admin fieldset (label beside the store selector, button
-  aligned with the field), section headings and the event table use the admin styles from a small module CSS file
-  instead of inline styles, and a notice explains when no store view has the module enabled or a store view uses
-  gtag.js (where the container is not needed).
-- Settings: every field has a short comment with its default (Enabled, Currency, Item Prices Include Tax, Send
-  Refunds and others), and the measurement ID comment says where to find it.
+- GTM Container Export page uses the standard admin form and explains when no store view sends events.
+- Every setting has a short comment with its default.
 
 ## 1.2.0 (2026-10-06)
-
-### Changed
-
-- Requires `softaware/module-core` instead of `softaware/module-base`. The admin menu and ACL now sit under `Softaware_Core::core` ("Softaware"); roles that had access keep it (migrated by module-core). After updating all SoftAware modules, `softaware/module-base` can be removed.
+- Requires Softaware Core instead of the retired Softaware Base; admin menu and ACL under "Softaware".
 
 ## 1.1.0 (2026-10-06)
+- New add_to_wishlist event (Luma and Hyvä), included in the GTM container export.
+- Refund value follows the purchase value settings; a queued refund can no longer be sent twice.
+- Cart events use the cart currency; free gift lines are reported at their real price.
+- The GTM noscript iframe is left out while Softaware Cookie Consent is active.
 
-### Added
-- `add_to_wishlist` event (Luma and Hyvä), delivered through the customer-data section; included in the GTM
-  container export.
-
-### Fixed
-- Refund value now follows *Purchase Value Includes Tax / Shipping*, like the purchase event. Before, refunds always
-  sent the credit memo grand total, so with tax or shipping excluded a full refund made revenue negative.
-- A queued refund could be sent twice when cron and `softaware:ga4:refunds --send` ran at the same time; it is now
-  claimed (optimistic lock on the attempt counter) before it is sent.
-- Cart events (add_to_cart, remove_from_cart, view_cart, begin_checkout) use the cart's currency instead of the
-  session's display currency.
-- Cart lines with a custom price of 0 (free gifts) were reported at the catalogue price in add_to_cart.
-
-### Security / privacy
-- The GTM `<noscript>` iframe is no longer printed while Softaware Cookie Consent is active: without JavaScript a
-  visitor cannot consent, so GTM must not load.
-
-## 1.0.0
-
-- Google Tag Manager (head + noscript, optional server-side tagging domain) or gtag.js with a GA4 measurement ID.
-- Google Consent Mode: works with Softaware Cookie Consent automatically; own defaults when no consent module is used;
-  optional "load only after consent".
-- GA4 ecommerce events with full item data: view_item_list (category, search, related, upsell, cross-sell), select_item,
-  view_item, add_to_cart, remove_from_cart, view_cart, begin_checkout, add_shipping_info, add_payment_info,
-  purchase (once per order), plus login, sign_up and search.
-- Cart events for every kind of cart change (AJAX and page reloads, Luma and Hyvä) through the customer-data section
-  `softaware-ga4`; de-duplicated in the browser.
-- Refunds from credit memos through the Measurement Protocol (cron, encrypted API secret).
-- Enhanced conversions: optional SHA-256 hashed user_data.
-- GTM container export (admin page and CLI).
-- Debug mode with console logging and GA4 DebugView support.
+## 1.0.0 (2026-10-06)
+- First release: Google Tag Manager or gtag.js with Google Consent Mode and optional loading after consent.
+- Full GA4 ecommerce events from product lists to purchase, plus login, sign_up and search (Luma and Hyvä).
+- Refunds through the Measurement Protocol, optional enhanced conversions, debug mode.
+- GTM container export in the admin and on the command line.

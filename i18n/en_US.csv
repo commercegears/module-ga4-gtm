@@ -51,3 +51,6 @@
 "Settings From","Settings From"
 "What Is Inside","What Is Inside"
 "How to Import","How to Import"
+"""%1"" is the example from the instructions. Enter the ID of your GTM container.","""%1"" is the example from the instructions. Enter the ID of your GTM container."
+"""%1"" is the example from the instructions. Enter the measurement ID of your GA4 data stream.","""%1"" is the example from the instructions. Enter the measurement ID of your GA4 data stream."
+"Store view ""%1"" does not exist.","Store view ""%1"" does not exist."

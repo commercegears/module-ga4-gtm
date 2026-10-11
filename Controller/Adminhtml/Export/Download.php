@@ -12,6 +12,8 @@ use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\App\Response\Http\FileFactory;
 use Magento\Framework\App\ResponseInterface;
+use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\Exception\LocalizedException;
 use Softaware\Ga4\Model\GtmContainerExport;
 
 /**
@@ -29,10 +31,15 @@ class Download extends Action implements HttpPostActionInterface
         parent::__construct($context);
     }
 
-    public function execute(): ResponseInterface
+    public function execute(): ResponseInterface|ResultInterface
     {
         $store = (string)$this->getRequest()->getParam('store', '0');
-        $json = $this->export->toJson(ctype_digit($store) ? (int)$store : $store);
+        try {
+            $json = $this->export->toJson(ctype_digit($store) ? (int)$store : $store);
+        } catch (LocalizedException $e) {
+            $this->messageManager->addErrorMessage($e->getMessage());
+            return $this->resultRedirectFactory->create()->setPath('*/*/index');
+        }
         return $this->fileFactory->create(
             'softaware-ga4-gtm-container.json',
             $json,

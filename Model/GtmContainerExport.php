@@ -6,6 +6,7 @@ declare(strict_types=1);
 
 namespace Softaware\Ga4\Model;
 
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Store\Model\StoreManagerInterface;
 
 /**
@@ -130,7 +131,7 @@ class GtmContainerExport
         try {
             return (int)$this->storeManager->getStore($store)->getId();
         } catch (\Exception) {
-            return 0;
+            throw new LocalizedException(__('Store view "%1" does not exist.', (string)$store));
         }
     }
 
