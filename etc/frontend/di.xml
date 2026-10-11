@@ -3,36 +3,36 @@
     <type name="Magento\Customer\CustomerData\SectionPoolInterface">
         <arguments>
             <argument name="sectionSourceMap" xsi:type="array">
-                <item name="softaware-ga4" xsi:type="string">Softaware\Ga4\CustomerData\Events</item>
+                <item name="commercegears-ga4" xsi:type="string">CommerceGears\Ga4\CustomerData\Events</item>
             </argument>
         </arguments>
     </type>
 
-    <virtualType name="Softaware\Ga4\Model\Event\Provider\ViewCart" type="Softaware\Ga4\Model\Event\Provider\QuoteEvent">
+    <virtualType name="CommerceGears\Ga4\Model\Event\Provider\ViewCart" type="CommerceGears\Ga4\Model\Event\Provider\QuoteEvent">
         <arguments>
             <argument name="event" xsi:type="string">view_cart</argument>
         </arguments>
     </virtualType>
-    <virtualType name="Softaware\Ga4\Model\Event\Provider\BeginCheckout" type="Softaware\Ga4\Model\Event\Provider\QuoteEvent">
+    <virtualType name="CommerceGears\Ga4\Model\Event\Provider\BeginCheckout" type="CommerceGears\Ga4\Model\Event\Provider\QuoteEvent">
         <arguments>
             <argument name="event" xsi:type="string">begin_checkout</argument>
         </arguments>
     </virtualType>
 
     <type name="Magento\Catalog\Block\Product\ListProduct">
-        <plugin name="softaware_ga4_register_list" type="Softaware\Ga4\Plugin\RegisterProductListPlugin"/>
+        <plugin name="commercegears_ga4_register_list" type="CommerceGears\Ga4\Plugin\RegisterProductListPlugin"/>
     </type>
     <type name="Magento\Catalog\Block\Product\ProductList\Related">
-        <plugin name="softaware_ga4_register_related" type="Softaware\Ga4\Plugin\RegisterLinkedProductsPlugin"/>
+        <plugin name="commercegears_ga4_register_related" type="CommerceGears\Ga4\Plugin\RegisterLinkedProductsPlugin"/>
     </type>
     <type name="Magento\Catalog\Block\Product\ProductList\Upsell">
-        <plugin name="softaware_ga4_register_upsell" type="Softaware\Ga4\Plugin\RegisterUpsellPlugin"/>
+        <plugin name="commercegears_ga4_register_upsell" type="CommerceGears\Ga4\Plugin\RegisterUpsellPlugin"/>
     </type>
     <type name="Magento\Checkout\Block\Cart\Crosssell">
-        <plugin name="softaware_ga4_register_crosssell" type="Softaware\Ga4\Plugin\RegisterCrosssellPlugin"/>
+        <plugin name="commercegears_ga4_register_crosssell" type="CommerceGears\Ga4\Plugin\RegisterCrosssellPlugin"/>
     </type>
 
-    <virtualType name="Softaware\Ga4\Model\Event\Provider\HyvaCrosssell" type="Softaware\Ga4\Model\Event\Provider\HyvaLinkedProducts">
+    <virtualType name="CommerceGears\Ga4\Model\Event\Provider\HyvaCrosssell" type="CommerceGears\Ga4\Model\Event\Provider\HyvaLinkedProducts">
         <arguments>
             <argument name="context" xsi:type="string">cart</argument>
         </arguments>

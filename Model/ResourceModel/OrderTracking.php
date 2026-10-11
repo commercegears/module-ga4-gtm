@@ -1,19 +1,19 @@
 <?php
 /**
- * Copyright © Softaware Commerce. All rights reserved.
+ * Copyright © CommerceGears. All rights reserved.
  */
 declare(strict_types=1);
 
-namespace Softaware\Ga4\Model\ResourceModel;
+namespace CommerceGears\Ga4\Model\ResourceModel;
 
 use Magento\Framework\App\ResourceConnection;
 
 /**
- * softaware_ga4_order: GA client id per order and the "purchase already sent" flag.
+ * commercegears_ga4_order: GA client id per order and the "purchase already sent" flag.
  */
 class OrderTracking
 {
-    private const TABLE = 'softaware_ga4_order';
+    private const TABLE = 'commercegears_ga4_order';
 
     public function __construct(private readonly ResourceConnection $resource)
     {

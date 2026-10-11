@@ -1,20 +1,20 @@
 <?php
 /**
- * Copyright © Softaware Commerce. All rights reserved.
+ * Copyright © CommerceGears. All rights reserved.
  */
 declare(strict_types=1);
 
-namespace Softaware\Ga4\Block\Adminhtml;
+namespace CommerceGears\Ga4\Block\Adminhtml;
 
 use Magento\Backend\Block\Template;
 use Magento\Backend\Block\Template\Context;
-use Softaware\Ga4\Model\Config;
-use Softaware\Ga4\Model\GtmContainerExport;
+use CommerceGears\Ga4\Model\Config;
+use CommerceGears\Ga4\Model\GtmContainerExport;
 
 class Export extends Template
 {
     /** @var string */
-    protected $_template = 'Softaware_Ga4::export.phtml';
+    protected $_template = 'CommerceGears_Ga4::export.phtml';
 
     public function __construct(
         Context $context,
@@ -90,6 +90,6 @@ class Export extends Template
 
     public function getConfigUrl(): string
     {
-        return $this->getUrl('adminhtml/system_config/edit', ['section' => 'softaware_ga4']);
+        return $this->getUrl('adminhtml/system_config/edit', ['section' => 'commercegears_ga4']);
     }
 }

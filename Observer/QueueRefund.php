@@ -1,19 +1,19 @@
 <?php
 /**
- * Copyright © Softaware Commerce. All rights reserved.
+ * Copyright © CommerceGears. All rights reserved.
  */
 declare(strict_types=1);
 
-namespace Softaware\Ga4\Observer;
+namespace CommerceGears\Ga4\Observer;
 
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Serialize\Serializer\Json;
 use Magento\Sales\Model\Order\Creditmemo;
 use Psr\Log\LoggerInterface;
-use Softaware\Ga4\Model\Config;
-use Softaware\Ga4\Model\ItemBuilder;
-use Softaware\Ga4\Model\ResourceModel\RefundQueue;
+use CommerceGears\Ga4\Model\Config;
+use CommerceGears\Ga4\Model\ItemBuilder;
+use CommerceGears\Ga4\Model\ResourceModel\RefundQueue;
 
 /**
  * sales_order_creditmemo_save_after: stores the refund event; cron sends it (no HTTP call in the admin request).
@@ -78,7 +78,7 @@ class QueueRefund implements ObserverInterface
             }
             $this->queue->add((int)$order->getId(), (int)$creditmemo->getId(), $storeId, $this->json->serialize($params));
         } catch (\Throwable $e) {
-            $this->logger->warning('Softaware_Ga4: could not queue refund: ' . $e->getMessage());
+            $this->logger->warning('CommerceGears_Ga4: could not queue refund: ' . $e->getMessage());
         }
     }
 }

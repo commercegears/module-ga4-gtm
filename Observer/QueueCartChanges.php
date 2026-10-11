@@ -1,19 +1,19 @@
 <?php
 /**
- * Copyright © Softaware Commerce. All rights reserved.
+ * Copyright © CommerceGears. All rights reserved.
  */
 declare(strict_types=1);
 
-namespace Softaware\Ga4\Observer;
+namespace CommerceGears\Ga4\Observer;
 
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Item as QuoteItem;
 use Psr\Log\LoggerInterface;
-use Softaware\Ga4\Model\Config;
-use Softaware\Ga4\Model\EventQueue;
-use Softaware\Ga4\Model\ItemBuilder;
+use CommerceGears\Ga4\Model\Config;
+use CommerceGears\Ga4\Model\EventQueue;
+use CommerceGears\Ga4\Model\ItemBuilder;
 
 /**
  * sales_quote_save_before (frontend): compares every cart line with its stored quantity and queues
@@ -23,7 +23,7 @@ use Softaware\Ga4\Model\ItemBuilder;
  */
 class QueueCartChanges implements ObserverInterface
 {
-    public const SKIP_FLAG = 'softaware_ga4_skip_tracking';
+    public const SKIP_FLAG = 'commercegears_ga4_skip_tracking';
 
     /** @var array<int, float> spl_object_id(item) => qty already reported */
     private array $reported = [];
@@ -85,7 +85,7 @@ class QueueCartChanges implements ObserverInterface
                 ]);
             }
         } catch (\Throwable $e) {
-            $this->logger->warning('Softaware_Ga4: could not track cart change: ' . $e->getMessage());
+            $this->logger->warning('CommerceGears_Ga4: could not track cart change: ' . $e->getMessage());
         }
     }
 }

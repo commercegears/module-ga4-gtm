@@ -1,20 +1,20 @@
 <?php
 /**
- * Copyright © Softaware Commerce. All rights reserved.
+ * Copyright © CommerceGears. All rights reserved.
  */
 declare(strict_types=1);
 
-namespace Softaware\Ga4\Console\Command;
+namespace CommerceGears\Ga4\Console\Command;
 
 use Magento\Framework\Exception\LocalizedException;
-use Softaware\Ga4\Model\GtmContainerExport;
+use CommerceGears\Ga4\Model\GtmContainerExport;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * bin/magento softaware:ga4:gtm-export [--store=default] [--output=file.json]
+ * bin/magento commercegears:ga4:gtm-export [--store=default] [--output=file.json]
  */
 class GtmExport extends Command
 {
@@ -27,7 +27,7 @@ class GtmExport extends Command
 
     protected function configure(): void
     {
-        $this->setName('softaware:ga4:gtm-export')
+        $this->setName('commercegears:ga4:gtm-export')
             ->setDescription('Write a GTM container (tags, triggers, variables for all GA4 events) to import into Google Tag Manager')
             ->addOption('store', null, InputOption::VALUE_REQUIRED, 'Store view code or id whose measurement ID is used', '0')
             ->addOption('output', 'o', InputOption::VALUE_REQUIRED, 'File to write (default: print to the console)');

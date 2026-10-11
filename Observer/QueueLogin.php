@@ -1,17 +1,17 @@
 <?php
 /**
- * Copyright © Softaware Commerce. All rights reserved.
+ * Copyright © CommerceGears. All rights reserved.
  */
 declare(strict_types=1);
 
-namespace Softaware\Ga4\Observer;
+namespace CommerceGears\Ga4\Observer;
 
 use Magento\Customer\Model\Customer;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
-use Softaware\Ga4\Model\Config;
-use Softaware\Ga4\Model\EventQueue;
-use Softaware\Ga4\Model\UserData;
+use CommerceGears\Ga4\Model\Config;
+use CommerceGears\Ga4\Model\EventQueue;
+use CommerceGears\Ga4\Model\UserData;
 
 /**
  * customer_login (frontend): queues "login" (not after a registration, which queues "sign_up").

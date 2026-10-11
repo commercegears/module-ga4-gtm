@@ -1,10 +1,10 @@
 <?php
 /**
- * Copyright © Softaware Commerce. All rights reserved.
+ * Copyright © CommerceGears. All rights reserved.
  */
 declare(strict_types=1);
 
-namespace Softaware\Ga4\Model;
+namespace CommerceGears\Ga4\Model;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Encryption\EncryptorInterface;
@@ -13,11 +13,11 @@ use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
 
 /**
- * Typed access to the softaware_ga4 configuration section.
+ * Typed access to the commercegears_ga4 configuration section.
  */
 class Config
 {
-    public const SECTION = 'softaware_ga4';
+    public const SECTION = 'commercegears_ga4';
     public const MODE_GTM = 'gtm';
     public const MODE_GTAG = 'gtag';
     public const DEFAULT_GTM_URL = 'https://www.googletagmanager.com';
@@ -84,7 +84,7 @@ class Config
     }
 
     /**
-     * Category code to wait for (empty = load immediately). Only honoured with Softaware Cookie Consent enabled.
+     * Category code to wait for (empty = load immediately). Only honoured with CommerceGears Cookie Consent enabled.
      */
     public function getLoadAfterConsent(int|string|null $store = null): string
     {
@@ -94,17 +94,17 @@ class Config
 
     public function isCookieConsentActive(int|string|null $store = null): bool
     {
-        return $this->moduleManager->isEnabled('Softaware_CookieConsent')
-            && $this->scopeConfig->isSetFlag('softaware_cookieconsent/general/enabled', ScopeInterface::SCOPE_STORE, $store);
+        return $this->moduleManager->isEnabled('CommerceGears_CookieConsent')
+            && $this->scopeConfig->isSetFlag('commercegears_cookieconsent/general/enabled', ScopeInterface::SCOPE_STORE, $store);
     }
 
     /**
-     * 'none', 'denied' or 'granted'; always 'none' when Softaware Cookie Consent sets the defaults.
+     * 'none', 'denied' or 'granted'; always 'none' when CommerceGears Cookie Consent sets the defaults.
      */
     public function getConsentDefault(int|string|null $store = null): string
     {
         if ($this->isCookieConsentActive($store)
-            && $this->scopeConfig->isSetFlag('softaware_cookieconsent/consent_mode/enabled', ScopeInterface::SCOPE_STORE, $store)
+            && $this->scopeConfig->isSetFlag('commercegears_cookieconsent/consent_mode/enabled', ScopeInterface::SCOPE_STORE, $store)
         ) {
             return 'none';
         }

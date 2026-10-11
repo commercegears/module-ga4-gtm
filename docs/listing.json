@@ -5,7 +5,7 @@
     "All GA4 ecommerce events with full item data",
     "Luma and Hyvä, no compatibility module",
     "Cart changes counted once, purchase once per order",
-    "Google Consent Mode, with or without Softaware Cookie Consent",
+    "Google Consent Mode, with or without CommerceGears Cookie Consent",
     "Refunds sent from the server via the Measurement Protocol",
     "Ready-to-import GTM container",
     "Optional enhanced conversions (hashed user_data)"
@@ -24,7 +24,7 @@
     {
       "icon": "shield",
       "title": "Consent first",
-      "text": "Google Consent Mode defaults are printed before the tag. With Softaware Cookie Consent you can also hold GTM or gtag.js back until the visitor accepts Analytics or Marketing."
+      "text": "Google Consent Mode defaults are printed before the tag. With CommerceGears Cookie Consent you can also hold GTM or gtag.js back until the visitor accepts Analytics or Marketing."
     }
   ],
   "showcase": [
@@ -61,7 +61,7 @@
     {
       "label": "GTM container",
       "title": "Import the tags instead of building them",
-      "text": "Softaware > GA4 & GTM > GTM Container Export downloads a container JSON with a Google tag, GA4 event tags, triggers and variables for every event the module sends.",
+      "text": "CommerceGears > GA4 & GTM > GTM Container Export downloads a container JSON with a Google tag, GA4 event tags, triggers and variables for every event the module sends.",
       "image": "docs/images/gtm-export.png"
     }
   ],
@@ -81,8 +81,8 @@
       "items": [
         "GTM snippet in the head plus noscript iframe, or gtag.js",
         "Custom GTM script domain for server-side tagging",
-        "Consent Mode defaults: from Softaware Cookie Consent, denied, granted or left to your consent tool",
-        "Load tags only after Analytics or Marketing consent (with Softaware Cookie Consent)",
+        "Consent Mode defaults: from CommerceGears Cookie Consent, denied, granted or left to your consent tool",
+        "Load tags only after Analytics or Marketing consent (with CommerceGears Cookie Consent)",
         "Debug mode: console log of every push and GA4 DebugView"
       ]
     },
@@ -111,17 +111,17 @@
     "storefront": [
       {
         "label": "Luma storefront",
-        "url": "https://demo.softawarecommerce.com/joust-duffle-bag.html"
+        "url": "https://demo.commercegears.com/joust-duffle-bag.html"
       },
       {
         "label": "Hyvä storefront",
-        "url": "https://demo.softawarecommerce.com/hyva/joust-duffle-bag.html"
+        "url": "https://demo.commercegears.com/hyva/joust-duffle-bag.html"
       }
     ],
     "admin": [
       {
         "label": "Admin panel",
-        "url": "https://demo.softawarecommerce.com/try-admin/ga4-gtm",
+        "url": "https://demo.commercegears.com/try-admin/ga4-gtm",
         "image": "docs/images/admin-settings.png"
       }
     ]

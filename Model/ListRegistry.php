@@ -1,10 +1,10 @@
 <?php
 /**
- * Copyright © Softaware Commerce. All rights reserved.
+ * Copyright © CommerceGears. All rights reserved.
  */
 declare(strict_types=1);
 
-namespace Softaware\Ga4\Model;
+namespace CommerceGears\Ga4\Model;
 
 /**
  * Request-scoped collection of product lists rendered on the page (category, search, related, upsell,

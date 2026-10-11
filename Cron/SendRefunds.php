@@ -1,12 +1,12 @@
 <?php
 /**
- * Copyright © Softaware Commerce. All rights reserved.
+ * Copyright © CommerceGears. All rights reserved.
  */
 declare(strict_types=1);
 
-namespace Softaware\Ga4\Cron;
+namespace CommerceGears\Ga4\Cron;
 
-use Softaware\Ga4\Model\RefundSender;
+use CommerceGears\Ga4\Model\RefundSender;
 
 class SendRefunds
 {

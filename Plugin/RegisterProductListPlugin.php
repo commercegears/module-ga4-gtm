@@ -1,16 +1,16 @@
 <?php
 /**
- * Copyright © Softaware Commerce. All rights reserved.
+ * Copyright © CommerceGears. All rights reserved.
  */
 declare(strict_types=1);
 
-namespace Softaware\Ga4\Plugin;
+namespace CommerceGears\Ga4\Plugin;
 
 use Magento\Catalog\Block\Product\ListProduct;
 use Magento\Catalog\Model\Layer\Resolver as LayerResolver;
 use Magento\Framework\App\RequestInterface;
-use Softaware\Ga4\Model\Config;
-use Softaware\Ga4\Model\ListRegistry;
+use CommerceGears\Ga4\Model\Config;
+use CommerceGears\Ga4\Model\ListRegistry;
 
 /**
  * Category and search result listings (Luma and Hyvä both use ListProduct).

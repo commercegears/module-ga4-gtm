@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
     <default>
-        <softaware_ga4>
+        <commercegears_ga4>
             <general>
                 <enabled>0</enabled>
                 <mode>gtm</mode>
@@ -25,6 +25,6 @@
                 <refund_enabled>0</refund_enabled>
                 <api_secret backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
             </measurement_protocol>
-        </softaware_ga4>
+        </commercegears_ga4>
     </default>
 </config>

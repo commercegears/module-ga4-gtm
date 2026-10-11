@@ -3,22 +3,22 @@
     <type name="Magento\Framework\Console\CommandList">
         <arguments>
             <argument name="commands" xsi:type="array">
-                <item name="softaware_ga4_refunds" xsi:type="object">Softaware\Ga4\Console\Command\SendRefunds</item>
-                <item name="softaware_ga4_gtm_export" xsi:type="object">Softaware\Ga4\Console\Command\GtmExport</item>
+                <item name="commercegears_ga4_refunds" xsi:type="object">CommerceGears\Ga4\Console\Command\SendRefunds</item>
+                <item name="commercegears_ga4_gtm_export" xsi:type="object">CommerceGears\Ga4\Console\Command\GtmExport</item>
             </argument>
         </arguments>
     </type>
-    <type name="Softaware\Ga4\Console\Command\SendRefunds">
+    <type name="CommerceGears\Ga4\Console\Command\SendRefunds">
         <arguments>
-            <argument name="sender" xsi:type="object">Softaware\Ga4\Model\RefundSender\Proxy</argument>
+            <argument name="sender" xsi:type="object">CommerceGears\Ga4\Model\RefundSender\Proxy</argument>
         </arguments>
     </type>
-    <type name="Softaware\Ga4\Console\Command\GtmExport">
+    <type name="CommerceGears\Ga4\Console\Command\GtmExport">
         <arguments>
-            <argument name="export" xsi:type="object">Softaware\Ga4\Model\GtmContainerExport\Proxy</argument>
+            <argument name="export" xsi:type="object">CommerceGears\Ga4\Model\GtmContainerExport\Proxy</argument>
         </arguments>
     </type>
-    <type name="Softaware\Ga4\Model\EventQueue">
+    <type name="CommerceGears\Ga4\Model\EventQueue">
         <arguments>
             <argument name="session" xsi:type="object">Magento\Customer\Model\Session\Proxy</argument>
         </arguments>

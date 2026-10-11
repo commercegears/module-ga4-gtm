@@ -1,5 +1,5 @@
 {
-    "softaware_ga4_order": {
+    "commercegears_ga4_order": {
         "column": {
             "order_id": true,
             "ga_client_id": true,
@@ -9,10 +9,10 @@
         },
         "constraint": {
             "PRIMARY": true,
-            "SOFTAWARE_GA4_ORDER_ORDER_ID_SALES_ORDER_ENTITY_ID": true
+            "COMMERCEGEARS_GA4_ORDER_ORDER_ID_SALES_ORDER_ENTITY_ID": true
         }
     },
-    "softaware_ga4_refund": {
+    "commercegears_ga4_refund": {
         "column": {
             "refund_id": true,
             "order_id": true,
@@ -26,12 +26,12 @@
             "sent_at": true
         },
         "index": {
-            "SOFTAWARE_GA4_REFUND_STATUS": true
+            "COMMERCEGEARS_GA4_REFUND_STATUS": true
         },
         "constraint": {
             "PRIMARY": true,
-            "SOFTAWARE_GA4_REFUND_CREDITMEMO_ID": true,
-            "SOFTAWARE_GA4_REFUND_CREDITMEMO_ID_SALES_CREDITMEMO_ENTITY_ID": true
+            "COMMERCEGEARS_GA4_REFUND_CREDITMEMO_ID": true,
+            "COMMERCEGEARS_GA4_REFUND_CREDITMEMO_ID_SALES_CREDITMEMO_ENTITY_ID": true
         }
     }
 }

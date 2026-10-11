@@ -1,10 +1,10 @@
 <?php
 /**
- * Copyright © Softaware Commerce. All rights reserved.
+ * Copyright © CommerceGears. All rights reserved.
  */
 declare(strict_types=1);
 
-namespace Softaware\Ga4\Model\Event\Provider;
+namespace CommerceGears\Ga4\Model\Event\Provider;
 
 use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\Product\LinkFactory;
@@ -13,9 +13,9 @@ use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Registry;
 use Magento\Store\Model\ScopeInterface;
-use Softaware\Ga4\Api\PageEventProviderInterface;
-use Softaware\Ga4\Model\Config;
-use Softaware\Ga4\Model\ListRegistry;
+use CommerceGears\Ga4\Api\PageEventProviderInterface;
+use CommerceGears\Ga4\Model\Config;
+use CommerceGears\Ga4\Model\ListRegistry;
 
 /**
  * Hyvä renders related, upsell and cross-sell sliders through its own ProductList view model, so they are

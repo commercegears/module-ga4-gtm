@@ -1,20 +1,20 @@
 <?php
 /**
- * Copyright © Softaware Commerce. All rights reserved.
+ * Copyright © CommerceGears. All rights reserved.
  */
 declare(strict_types=1);
 
-namespace Softaware\Ga4\Block;
+namespace CommerceGears\Ga4\Block;
 
 use Magento\Catalog\Model\Product;
 use Magento\Framework\Serialize\Serializer\JsonHexTag;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
 use Psr\Log\LoggerInterface;
-use Softaware\Ga4\Api\PageEventProviderInterface;
-use Softaware\Ga4\Model\Config;
-use Softaware\Ga4\Model\ItemBuilder;
-use Softaware\Ga4\Model\ListRegistry;
+use CommerceGears\Ga4\Api\PageEventProviderInterface;
+use CommerceGears\Ga4\Model\Config;
+use CommerceGears\Ga4\Model\ItemBuilder;
+use CommerceGears\Ga4\Model\ListRegistry;
 
 /**
  * Rendered at the end of <body>: page events from the providers plus view_item_list for every product
@@ -24,7 +24,7 @@ use Softaware\Ga4\Model\ListRegistry;
 class DataLayer extends Template
 {
     /** @var string */
-    protected $_template = 'Softaware_Ga4::datalayer.phtml';
+    protected $_template = 'CommerceGears_Ga4::datalayer.phtml';
 
     public function __construct(
         Context $context,
@@ -45,7 +45,7 @@ class DataLayer extends Template
 
     public function getScriptUrl(): string
     {
-        return $this->getViewFileUrl('Softaware_Ga4::js/ga4.js');
+        return $this->getViewFileUrl('CommerceGears_Ga4::js/ga4.js');
     }
 
     public function getPayloadJson(): string
@@ -73,7 +73,7 @@ class DataLayer extends Template
                     $events[] = $event;
                 }
             } catch (\Throwable $e) {
-                $this->logger->warning(sprintf('Softaware_Ga4: provider "%s" failed: %s', $name, $e->getMessage()));
+                $this->logger->warning(sprintf('CommerceGears_Ga4: provider "%s" failed: %s', $name, $e->getMessage()));
             }
         }
         return $events;
@@ -120,7 +120,7 @@ class DataLayer extends Template
                 }
                 $result[] = ['id' => $list['id'], 'name' => $list['name'], 'items' => $items, 'urls' => $urls];
             } catch (\Throwable $e) {
-                $this->logger->warning('Softaware_Ga4: list "' . $list['id'] . '" failed: ' . $e->getMessage());
+                $this->logger->warning('CommerceGears_Ga4: list "' . $list['id'] . '" failed: ' . $e->getMessage());
             }
         }
         return $result;

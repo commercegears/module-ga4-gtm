@@ -1,10 +1,10 @@
 <?php
 /**
- * Copyright © Softaware Commerce. All rights reserved.
+ * Copyright © CommerceGears. All rights reserved.
  */
 declare(strict_types=1);
 
-namespace Softaware\Ga4\Controller\Adminhtml\Export;
+namespace CommerceGears\Ga4\Controller\Adminhtml\Export;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
@@ -14,14 +14,14 @@ use Magento\Framework\App\Response\Http\FileFactory;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\LocalizedException;
-use Softaware\Ga4\Model\GtmContainerExport;
+use CommerceGears\Ga4\Model\GtmContainerExport;
 
 /**
  * POST: downloads the GTM container JSON for the chosen store view.
  */
 class Download extends Action implements HttpPostActionInterface
 {
-    public const ADMIN_RESOURCE = 'Softaware_Ga4::export';
+    public const ADMIN_RESOURCE = 'CommerceGears_Ga4::export';
 
     public function __construct(
         Context $context,
@@ -41,7 +41,7 @@ class Download extends Action implements HttpPostActionInterface
             return $this->resultRedirectFactory->create()->setPath('*/*/index');
         }
         return $this->fileFactory->create(
-            'softaware-ga4-gtm-container.json',
+            'commercegears-ga4-gtm-container.json',
             $json,
             DirectoryList::VAR_DIR,
             'application/json'

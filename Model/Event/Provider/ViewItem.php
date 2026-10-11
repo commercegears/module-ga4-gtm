@@ -1,15 +1,15 @@
 <?php
 /**
- * Copyright © Softaware Commerce. All rights reserved.
+ * Copyright © CommerceGears. All rights reserved.
  */
 declare(strict_types=1);
 
-namespace Softaware\Ga4\Model\Event\Provider;
+namespace CommerceGears\Ga4\Model\Event\Provider;
 
 use Magento\Catalog\Model\Product;
 use Magento\Framework\Registry;
-use Softaware\Ga4\Api\PageEventProviderInterface;
-use Softaware\Ga4\Model\ItemBuilder;
+use CommerceGears\Ga4\Api\PageEventProviderInterface;
+use CommerceGears\Ga4\Model\ItemBuilder;
 
 /**
  * view_item on the product page.

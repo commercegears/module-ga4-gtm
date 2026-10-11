@@ -1,10 +1,10 @@
 <?php
 /**
- * Copyright © Softaware Commerce. All rights reserved.
+ * Copyright © CommerceGears. All rights reserved.
  */
 declare(strict_types=1);
 
-namespace Softaware\Ga4\Model;
+namespace CommerceGears\Ga4\Model;
 
 use Magento\Catalog\Model\Category;
 use Magento\Catalog\Model\ResourceModel\Category\CollectionFactory;

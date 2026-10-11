@@ -1,15 +1,15 @@
 <?php
 /**
- * Copyright © Softaware Commerce. All rights reserved.
+ * Copyright © CommerceGears. All rights reserved.
  */
 declare(strict_types=1);
 
-namespace Softaware\Ga4\Block;
+namespace CommerceGears\Ga4\Block;
 
 use Magento\Framework\Serialize\Serializer\Json;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
-use Softaware\Ga4\Model\Config;
+use CommerceGears\Ga4\Model\Config;
 
 /**
  * GTM / gtag.js snippet in <head> (template head.phtml) and GTM <noscript> after <body> (noscript.phtml).
@@ -52,7 +52,7 @@ class Tag extends Template
 
     /**
      * The GTM <noscript> iframe loads Google Tag Manager without JavaScript, so a visitor can never give or refuse
-     * consent: it is left out while Softaware Cookie Consent is active.
+     * consent: it is left out while CommerceGears Cookie Consent is active.
      */
     public function showNoscript(): bool
     {

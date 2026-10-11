@@ -1,19 +1,19 @@
 <?php
 /**
- * Copyright © Softaware Commerce. All rights reserved.
+ * Copyright © CommerceGears. All rights reserved.
  */
 declare(strict_types=1);
 
-namespace Softaware\Ga4\Model\ResourceModel;
+namespace CommerceGears\Ga4\Model\ResourceModel;
 
 use Magento\Framework\App\ResourceConnection;
 
 /**
- * softaware_ga4_refund: refund events to send through the Measurement Protocol.
+ * commercegears_ga4_refund: refund events to send through the Measurement Protocol.
  */
 class RefundQueue
 {
-    private const TABLE = 'softaware_ga4_refund';
+    private const TABLE = 'commercegears_ga4_refund';
     public const MAX_ATTEMPTS = 5;
 
     public function __construct(private readonly ResourceConnection $resource)

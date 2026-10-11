@@ -1,10 +1,10 @@
 <?php
 /**
- * Copyright © Softaware Commerce. All rights reserved.
+ * Copyright © CommerceGears. All rights reserved.
  */
 declare(strict_types=1);
 
-namespace Softaware\Ga4\Model\Config\Backend;
+namespace CommerceGears\Ga4\Model\Config\Backend;
 
 use Magento\Framework\App\Config\Value;
 use Magento\Framework\Exception\LocalizedException;

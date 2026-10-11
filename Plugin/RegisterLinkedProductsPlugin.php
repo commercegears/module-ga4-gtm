@@ -1,14 +1,14 @@
 <?php
 /**
- * Copyright © Softaware Commerce. All rights reserved.
+ * Copyright © CommerceGears. All rights reserved.
  */
 declare(strict_types=1);
 
-namespace Softaware\Ga4\Plugin;
+namespace CommerceGears\Ga4\Plugin;
 
 use Magento\Catalog\Block\Product\ProductList\Related;
-use Softaware\Ga4\Model\Config;
-use Softaware\Ga4\Model\ListRegistry;
+use CommerceGears\Ga4\Model\Config;
+use CommerceGears\Ga4\Model\ListRegistry;
 
 /**
  * Luma related / upsell / cross-sell blocks. (Hyvä renders these lists through its ProductList view model;
@@ -33,7 +33,7 @@ class RegisterLinkedProductsPlugin
     }
 
     /**
-     * Used by plugin "softaware_ga4_register_upsell" (Upsell::getItemCollection()).
+     * Used by plugin "commercegears_ga4_register_upsell" (Upsell::getItemCollection()).
      */
     public function register(string $listId, string $listName, mixed $result): mixed
     {

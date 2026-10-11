@@ -4,8 +4,8 @@ GA4 ecommerce tracking for Luma and Hyvä: Google Tag Manager or gtag.js, a comp
 Mode, refunds sent from the server through the Measurement Protocol, and a GTM container you can import in one step.
 This guide covers installation, every setting and day-to-day use.
 
-- Admin demo: https://demo.softawarecommerce.com/try-admin/ga4-gtm
-- Composer access: https://softawarecommerce.com/shop/composer-access/
+- Admin demo: https://demo.commercegears.com/try-admin/ga4-gtm
+- Composer access: https://commercegears.com/shop/composer-access/
 - Changelog: [CHANGELOG.md](../CHANGELOG.md) · Questions: [FAQ](faq.md)
 
 ![add_to_cart event in the dataLayer after adding a product on Luma](images/luma-add-to-cart.png)
@@ -17,38 +17,38 @@ This guide covers installation, every setting and day-to-day use.
 | Magento | Open Source or Adobe Commerce 2.4.7 to 2.4.9 |
 | PHP | 8.2 to 8.5 |
 | Themes | Luma, Blank and themes based on them; Hyvä 1.3+ (no compatibility module needed) |
-| Other | `softaware/module-core` (installed automatically) |
-| Optional | `softaware/module-cookie-consent` for the consent banner and "load after consent" |
+| Other | `commercegears/module-core` (installed automatically) |
+| Optional | `commercegears/module-cookie-consent` for the consent banner and "load after consent" |
 | Google | A GTM container ID and/or a GA4 measurement ID; a Measurement Protocol API secret for refunds |
 
 ## 2. Installation
 
-With Composer. Use the Composer keys from your account on softawarecommerce.com (see
-https://softawarecommerce.com/shop/composer-access/):
+With Composer. Use the Composer keys from your account on commercegears.com (see
+https://commercegears.com/shop/composer-access/):
 
 ```bash
-composer config repositories.softaware composer https://repo.softawarecommerce.com
-composer config --auth http-basic.repo.softawarecommerce.com PUBLIC_KEY PRIVATE_KEY
-composer require softaware/module-ga4-gtm
+composer config repositories.commercegears composer https://repo.commercegears.com
+composer config --auth http-basic.repo.commercegears.com PUBLIC_KEY PRIVATE_KEY
+composer require commercegears/module-ga4-gtm
 bin/magento setup:upgrade
 bin/magento setup:di:compile            # production mode only
 bin/magento setup:static-content:deploy # production mode only
 bin/magento cache:flush
 ```
 
-To update later: `composer update softaware/module-ga4-gtm`, then the same `bin/magento` commands.
+To update later: `composer update commercegears/module-ga4-gtm`, then the same `bin/magento` commands.
 
 Magento cron must run (it sends the refunds). Nothing else is needed on Hyvä: the module ships its own Hyvä layout
 handles.
 
 ## 3. Quick start with Google Tag Manager
 
-1. Go to **Stores > Configuration > Softaware > GA4 & Google Tag Manager** (also under **Softaware > GA4 & GTM >
+1. Go to **Stores > Configuration > CommerceGears > GA4 & Google Tag Manager** (also under **CommerceGears > GA4 & GTM >
    Settings**).
 2. **General > Enabled = Yes**, **Tag Type = Google Tag Manager**.
 3. Enter your **GTM Container ID** (for example GTM-AB12CDE) and your **GA4 Measurement ID** (for example
    G-AB12CD34EF). Save and flush the cache.
-4. Open **Softaware > GA4 & GTM > GTM Container Export**, pick the store view in **Settings From** and click
+4. Open **CommerceGears > GA4 & GTM > GTM Container Export**, pick the store view in **Settings From** and click
    **Download GTM Container JSON**.
 5. In Google Tag Manager open **Admin > Import Container**, choose the file, your workspace, **Merge** and "Rename
    conflicting tags, triggers and variables". Check the measurement ID in the variable "Const - GA4 Measurement ID",
@@ -61,7 +61,7 @@ import.
 
 ## 4. Settings
 
-All settings are under **Stores > Configuration > Softaware > GA4 & Google Tag Manager** and can be set per website
+All settings are under **Stores > Configuration > CommerceGears > GA4 & Google Tag Manager** and can be set per website
 and per store view.
 
 ### General
@@ -75,8 +75,8 @@ and per store view.
 | GTM Container ID | For example GTM-AB12CDE (top of your GTM workspace). Shown for Google Tag Manager only. The placeholder GTM-XXXXXXX is refused. |
 | GTM Script Domain | Change only for server-side tagging (for example https://sgtm.example.com). Default: https://www.googletagmanager.com |
 | GA4 Measurement ID | For example G-AB12CD34EF (GA4 Admin > Data streams). Required for gtag.js and refunds; also written into the GTM container export. The placeholder G-XXXXXXXXXX is refused. |
-| Load Tags | **Immediately (Google Consent Mode)** (default), **After "Analytics" consent** or **After "Marketing" consent**. The two "after" options need Softaware Cookie Consent and are ignored when it is disabled. |
-| Consent Mode Defaults (Without Softaware Cookie Consent) | **Do not set (consent tool sets them)**, **Denied until updated** or **Granted (no consent required)**. Only used when Softaware Cookie Consent is not enabled. |
+| Load Tags | **Immediately (Google Consent Mode)** (default), **After "Analytics" consent** or **After "Marketing" consent**. The two "after" options need CommerceGears Cookie Consent and are ignored when it is disabled. |
+| Consent Mode Defaults (Without CommerceGears Cookie Consent) | **Do not set (consent tool sets them)**, **Denied until updated** or **Granted (no consent required)**. Only used when CommerceGears Cookie Consent is not enabled. |
 | Debug Mode | Logs every event to the browser console and adds debug_mode so events show in GA4 DebugView. Switch off on live stores. |
 
 ### Ecommerce Data
@@ -129,23 +129,23 @@ and per store view.
 - Page events (view_item_list, view_item, view_cart, begin_checkout, purchase, search) are printed in the page as
   JSON and pushed when the page loads.
 - Events that belong to the visitor (cart changes, wish list, login, sign-up) are queued on the server and delivered
-  through the private customer-data section `softaware-ga4`, so they work with the full-page cache.
+  through the private customer-data section `commercegears-ga4`, so they work with the full-page cache.
 - Cart changes are detected by comparing each cart line with its stored quantity. An AJAX add and a full page reload
   are both counted once, and a guest cart merged at login is not counted.
 - Every event has an id, and the browser remembers the ids it has already pushed. If a page navigates away before the
   section response arrives, the next page fetches the section once.
-- Purchase is flagged in the table `softaware_ga4_order` and never output twice for the same order.
+- Purchase is flagged in the table `commercegears_ga4_order` and never output twice for the same order.
 - Cart events use the cart's own currency. Lines with a custom price (for example free gifts) are reported at that
   price, even when it is 0.
 
 To check the events, switch on **Debug Mode** and open the browser console: every push is logged as
-`[Softaware GA4] <event>`. You can also inspect `window.dataLayer`, or use GTM Preview and GA4 DebugView.
+`[CommerceGears GA4] <event>`. You can also inspect `window.dataLayer`, or use GTM Preview and GA4 DebugView.
 
 ![view_item on a phone (Hyvä)](images/mobile-hyva-view-item.png)
 
 ## 6. Consent
 
-- **With Softaware Cookie Consent**: the Consent Mode defaults come from that module and are printed before the tag.
+- **With CommerceGears Cookie Consent**: the Consent Mode defaults come from that module and are printed before the tag.
   Nothing else is needed. The GTM `<noscript>` iframe is left out, because a visitor without JavaScript cannot give
   consent. With **Load Tags = After "Analytics" consent** (or Marketing), GTM or gtag.js is loaded only after the
   visitor accepts that category.
@@ -154,8 +154,8 @@ To check the events, switch on **Debug Mode** and open the browser console: ever
 - **Without consent requirements**: choose **Granted (no consent required)**.
 
 The defaults cover ad_storage, ad_user_data, ad_personalization, analytics_storage, functionality_storage and
-personalization_storage. The GTM container includes a trigger "CE - softaware_consent_update" and variables for the
-Softaware Cookie Consent categories, for your own tags that should wait for consent.
+personalization_storage. The GTM container includes a trigger "CE - commercegears_consent_update" and variables for the
+CommerceGears Cookie Consent categories, for your own tags that should wait for consent.
 
 ## 7. Refunds
 
@@ -175,30 +175,30 @@ refund is claimed before it is sent, so cron and the CLI cannot send it twice.
 
 | Command | What it does |
 | --- | --- |
-| `bin/magento softaware:ga4:refunds` | Lists queued refunds. |
-| `bin/magento softaware:ga4:refunds --dry-run` | Prints the Measurement Protocol payloads without sending them. |
-| `bin/magento softaware:ga4:refunds --send` | Sends pending refunds now (cron does this every five minutes). |
-| `bin/magento softaware:ga4:gtm-export [--store=default] [--output=container.json]` | Writes the GTM container JSON, using the measurement ID of that store view. An unknown store view is an error. |
+| `bin/magento commercegears:ga4:refunds` | Lists queued refunds. |
+| `bin/magento commercegears:ga4:refunds --dry-run` | Prints the Measurement Protocol payloads without sending them. |
+| `bin/magento commercegears:ga4:refunds --send` | Sends pending refunds now (cron does this every five minutes). |
+| `bin/magento commercegears:ga4:gtm-export [--store=default] [--output=container.json]` | Writes the GTM container JSON, using the measurement ID of that store view. An unknown store view is an error. |
 
 ## 9. For developers
 
 - Push your own events in the browser: `window.swGa4.push('event_name', {currency: 'GBP', value: 10, items: [...]})`.
 - Queue an event on the server (delivered on the next section load):
-  `Softaware\Ga4\Model\EventQueue::add($event, $params)`.
+  `CommerceGears\Ga4\Model\EventQueue::add($event, $params)`.
 - Register a product list for view_item_list and select_item:
-  `Softaware\Ga4\Model\ListRegistry::add($id, $name, $products)`.
-- Add page events: implement `Softaware\Ga4\Api\PageEventProviderInterface` and add it to the `providers` argument
-  of the block `softaware.ga4.datalayer` in a layout handle.
-- Build items: `Softaware\Ga4\Model\ItemBuilder::fromProduct()`, `fromQuoteItem()`, `fromOrderItem()`.
+  `CommerceGears\Ga4\Model\ListRegistry::add($id, $name, $products)`.
+- Add page events: implement `CommerceGears\Ga4\Api\PageEventProviderInterface` and add it to the `providers` argument
+  of the block `commercegears.ga4.datalayer` in a layout handle.
+- Build items: `CommerceGears\Ga4\Model\ItemBuilder::fromProduct()`, `fromQuoteItem()`, `fromOrderItem()`.
 
 ## 10. Permissions (ACL)
 
-Under **System > Permissions > User Roles > Role Resources > Softaware > GA4 & GTM**:
+Under **System > Permissions > User Roles > Role Resources > CommerceGears > GA4 & GTM**:
 
 | Resource | Gives access to |
 | --- | --- |
-| `Softaware_Ga4::export` | GTM Container Export |
-| `Softaware_Ga4::config` | The GA4 & Google Tag Manager settings |
+| `CommerceGears_Ga4::export` | GTM Container Export |
+| `CommerceGears_Ga4::config` | The GA4 & Google Tag Manager settings |
 
 ## 11. Troubleshooting
 
@@ -212,7 +212,7 @@ Under **System > Permissions > User Roles > Role Resources > Softaware > GA4 & G
   pre-selects.
 - **A CMS product widget sends no view_item_list**: its block HTML is cached, so these lists are not reported.
 - **Refunds are not arriving**: check **Send Refunds**, the API secret and the measurement ID, make sure Magento cron
-  runs, then run `bin/magento softaware:ga4:refunds` to see the queue and its last error. `--dry-run` shows the
+  runs, then run `bin/magento commercegears:ga4:refunds` to see the queue and its last error. `--dry-run` shows the
   payload.
 - **Enhanced conversions without phone numbers**: Google requires E.164, so phone numbers are only sent when stored
   in international format (+44...).
@@ -220,11 +220,11 @@ Under **System > Permissions > User Roles > Role Resources > Softaware > GA4 & G
 ## 12. Uninstall
 
 ```bash
-bin/magento module:disable Softaware_Ga4
-composer remove softaware/module-ga4-gtm
+bin/magento module:disable CommerceGears_Ga4
+composer remove commercegears/module-ga4-gtm
 bin/magento setup:upgrade
 bin/magento cache:flush
 ```
 
-Then remove the imported tags from your GTM container if you no longer need them. The tables `softaware_ga4_order`
-and `softaware_ga4_refund` can be dropped once the module is removed.
+Then remove the imported tags from your GTM container if you no longer need them. The tables `commercegears_ga4_order`
+and `commercegears_ga4_refund` can be dropped once the module is removed.

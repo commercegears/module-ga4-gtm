@@ -1,8 +1,8 @@
 /**
- * Softaware GA4 - pushes GA4 ecommerce events to the dataLayer (GTM) or gtag (gtag.js).
+ * CommerceGears GA4 - pushes GA4 ecommerce events to the dataLayer (GTM) or gtag (gtag.js).
  * Vanilla JS for Luma and Hyvä. Sources:
  *   1. #sw-ga4-data JSON rendered in the page (view_item, view_item_list, view_cart, begin_checkout, purchase, search)
- *   2. customer-data section "softaware-ga4" (add_to_cart, remove_from_cart, login, sign_up) - private content,
+ *   2. customer-data section "commercegears-ga4" (add_to_cart, remove_from_cart, login, sign_up) - private content,
  *      so it works with full-page cache and AJAX carts
  *   3. clicks on product links inside tracked lists (select_item)
  *   4. Luma checkout mixins (add_shipping_info, add_payment_info) via window.swGa4.push()
@@ -53,7 +53,7 @@
 
     function log(name, params, extra) {
         if (debug && w.console) {
-            console.log('%c[Softaware GA4]%c ' + name, 'color:#fff;background:#1a73e8;padding:1px 4px;border-radius:2px', 'font-weight:bold', params, extra || '');
+            console.log('%c[CommerceGears GA4]%c ' + name, 'color:#fff;background:#1a73e8;padding:1px 4px;border-radius:2px', 'font-weight:bold', params, extra || '');
         }
     }
 
@@ -171,12 +171,12 @@
     if (w.hyva) {
         // Hyvä: private content is dispatched on window after every (re)load.
         w.addEventListener('private-content-loaded', function (event) {
-            handleSection(event.detail && event.detail.data ? event.detail.data['softaware-ga4'] : null);
+            handleSection(event.detail && event.detail.data ? event.detail.data['commercegears-ga4'] : null);
         });
     } else if (typeof w.require === 'function') {
         // Luma (and the Luma checkout used by Hyvä).
         w.require(['Magento_Customer/js/customer-data'], function (customerData) {
-            var section = customerData.get('softaware-ga4');
+            var section = customerData.get('commercegears-ga4');
             handleSection(section());
             section.subscribe(function (value) {
                 handleSection(value);
@@ -188,14 +188,14 @@
     // Events were queued but the section response may have been lost (page navigated away mid-request):
     // fetch the section once directly. Already delivered events are skipped by their uid.
     if (/(?:^|; )sw_ga4_pending=1/.test(d.cookie) && w.fetch) {
-        w.fetch((w.BASE_URL || '/') + 'customer/section/load/?sections=softaware-ga4', {
+        w.fetch((w.BASE_URL || '/') + 'customer/section/load/?sections=commercegears-ga4', {
             credentials: 'same-origin',
             headers: { 'X-Requested-With': 'XMLHttpRequest' }
         }).then(function (response) {
             return response.ok ? response.json() : null;
         }).then(function (json) {
             if (json) {
-                handleSection(json['softaware-ga4']);
+                handleSection(json['commercegears-ga4']);
                 clearPendingCookie();
             }
         }).catch(function () { /* try again on the next page */ });

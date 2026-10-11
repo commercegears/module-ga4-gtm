@@ -1,10 +1,10 @@
 <?php
 /**
- * Copyright © Softaware Commerce. All rights reserved.
+ * Copyright © CommerceGears. All rights reserved.
  */
 declare(strict_types=1);
 
-namespace Softaware\Ga4\Model\Config\Source;
+namespace CommerceGears\Ga4\Model\Config\Source;
 
 use Magento\Framework\Data\OptionSourceInterface;
 

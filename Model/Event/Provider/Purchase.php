@@ -1,18 +1,18 @@
 <?php
 /**
- * Copyright © Softaware Commerce. All rights reserved.
+ * Copyright © CommerceGears. All rights reserved.
  */
 declare(strict_types=1);
 
-namespace Softaware\Ga4\Model\Event\Provider;
+namespace CommerceGears\Ga4\Model\Event\Provider;
 
 use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Sales\Model\Order;
-use Softaware\Ga4\Api\PageEventProviderInterface;
-use Softaware\Ga4\Model\Config;
-use Softaware\Ga4\Model\ItemBuilder;
-use Softaware\Ga4\Model\ResourceModel\OrderTracking;
-use Softaware\Ga4\Model\UserData;
+use CommerceGears\Ga4\Api\PageEventProviderInterface;
+use CommerceGears\Ga4\Model\Config;
+use CommerceGears\Ga4\Model\ItemBuilder;
+use CommerceGears\Ga4\Model\ResourceModel\OrderTracking;
+use CommerceGears\Ga4\Model\UserData;
 
 /**
  * purchase on the order success page, output once per order (reloading the page does not repeat it).

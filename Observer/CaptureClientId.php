@@ -1,18 +1,18 @@
 <?php
 /**
- * Copyright © Softaware Commerce. All rights reserved.
+ * Copyright © CommerceGears. All rights reserved.
  */
 declare(strict_types=1);
 
-namespace Softaware\Ga4\Observer;
+namespace CommerceGears\Ga4\Observer;
 
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Stdlib\CookieManagerInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 use Psr\Log\LoggerInterface;
-use Softaware\Ga4\Model\Config;
-use Softaware\Ga4\Model\ResourceModel\OrderTracking;
+use CommerceGears\Ga4\Model\Config;
+use CommerceGears\Ga4\Model\ResourceModel\OrderTracking;
 
 /**
  * sales_model_service_quote_submit_success (storefront and REST checkout): remembers the GA client and
@@ -46,7 +46,7 @@ class CaptureClientId implements ObserverInterface
         try {
             $this->orderTracking->saveClientId((int)$order->getEntityId(), $clientId, $sessionId);
         } catch (\Throwable $e) {
-            $this->logger->warning('Softaware_Ga4: could not store GA client id: ' . $e->getMessage());
+            $this->logger->warning('CommerceGears_Ga4: could not store GA client id: ' . $e->getMessage());
         }
     }
 

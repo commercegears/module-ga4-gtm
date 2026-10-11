@@ -1,15 +1,15 @@
 <?php
 /**
- * Copyright © Softaware Commerce. All rights reserved.
+ * Copyright © CommerceGears. All rights reserved.
  */
 declare(strict_types=1);
 
-namespace Softaware\Ga4\Console\Command;
+namespace CommerceGears\Ga4\Console\Command;
 
 use Magento\Framework\App\Area;
 use Magento\Framework\App\State;
-use Softaware\Ga4\Model\RefundSender;
-use Softaware\Ga4\Model\ResourceModel\RefundQueue;
+use CommerceGears\Ga4\Model\RefundSender;
+use CommerceGears\Ga4\Model\ResourceModel\RefundQueue;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
@@ -17,7 +17,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * bin/magento softaware:ga4:refunds [--send] [--dry-run]
+ * bin/magento commercegears:ga4:refunds [--send] [--dry-run]
  */
 class SendRefunds extends Command
 {
@@ -32,7 +32,7 @@ class SendRefunds extends Command
 
     protected function configure(): void
     {
-        $this->setName('softaware:ga4:refunds')
+        $this->setName('commercegears:ga4:refunds')
             ->setDescription('List queued GA4 refund events; --send sends pending ones now (cron does this every 5 minutes)')
             ->addOption('send', null, InputOption::VALUE_NONE, 'Send pending refunds now')
             ->addOption('dry-run', null, InputOption::VALUE_NONE, 'Print the Measurement Protocol payloads without sending');

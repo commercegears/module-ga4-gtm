@@ -1,10 +1,10 @@
 <?php
 /**
- * Copyright © Softaware Commerce. All rights reserved.
+ * Copyright © CommerceGears. All rights reserved.
  */
 declare(strict_types=1);
 
-namespace Softaware\Ga4\Model;
+namespace CommerceGears\Ga4\Model;
 
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Store\Model\StoreManagerInterface;
@@ -57,7 +57,7 @@ class GtmContainerExport
             'ecommerce' => $this->customEventTrigger('CE - GA4 ecommerce events', self::ECOMMERCE_EVENTS),
             'account' => $this->customEventTrigger('CE - GA4 login and sign_up', self::ACCOUNT_EVENTS),
             'search' => $this->customEventTrigger('CE - GA4 search', ['search']),
-            'consent' => $this->customEventTrigger('CE - softaware_consent_update', ['softaware_consent_update']),
+            'consent' => $this->customEventTrigger('CE - commercegears_consent_update', ['commercegears_consent_update']),
         ];
 
         $tags = [
@@ -99,7 +99,7 @@ class GtmContainerExport
                     'path' => 'accounts/0/containers/0',
                     'accountId' => '0',
                     'containerId' => '0',
-                    'name' => 'Softaware GA4 ecommerce',
+                    'name' => 'CommerceGears GA4 ecommerce',
                     'publicId' => $publicId,
                     'usageContext' => ['WEB'],
                     'fingerprint' => '0',

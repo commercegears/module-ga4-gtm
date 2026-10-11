@@ -1,17 +1,17 @@
 <?php
 /**
- * Copyright © Softaware Commerce. All rights reserved.
+ * Copyright © CommerceGears. All rights reserved.
  */
 declare(strict_types=1);
 
-namespace Softaware\Ga4\CustomerData;
+namespace CommerceGears\Ga4\CustomerData;
 
 use Magento\Customer\CustomerData\SectionSourceInterface;
-use Softaware\Ga4\Model\Config;
-use Softaware\Ga4\Model\EventQueue;
+use CommerceGears\Ga4\Model\Config;
+use CommerceGears\Ga4\Model\EventQueue;
 
 /**
- * Customer-data section "softaware-ga4": queued ecommerce events for the current visitor.
+ * Customer-data section "commercegears-ga4": queued ecommerce events for the current visitor.
  */
 class Events implements SectionSourceInterface
 {

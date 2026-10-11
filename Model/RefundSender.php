@@ -1,18 +1,18 @@
 <?php
 /**
- * Copyright © Softaware Commerce. All rights reserved.
+ * Copyright © CommerceGears. All rights reserved.
  */
 declare(strict_types=1);
 
-namespace Softaware\Ga4\Model;
+namespace CommerceGears\Ga4\Model;
 
 use Magento\Framework\Serialize\Serializer\Json;
 use Psr\Log\LoggerInterface;
-use Softaware\Ga4\Model\ResourceModel\OrderTracking;
-use Softaware\Ga4\Model\ResourceModel\RefundQueue;
+use CommerceGears\Ga4\Model\ResourceModel\OrderTracking;
+use CommerceGears\Ga4\Model\ResourceModel\RefundQueue;
 
 /**
- * Sends queued refund events (used by cron and by bin/magento softaware:ga4:send-refunds).
+ * Sends queued refund events (used by cron and by bin/magento commercegears:ga4:send-refunds).
  */
 class RefundSender
 {
@@ -66,7 +66,7 @@ class RefundSender
                 $output && $output(sprintf('#%d sent (transaction %s)', $refundId, $params['transaction_id'] ?? '?'));
             } catch (\Throwable $e) {
                 $this->queue->markFailed($refundId, $e->getMessage());
-                $this->logger->warning('Softaware_Ga4: refund #' . $refundId . ' not sent: ' . $e->getMessage());
+                $this->logger->warning('CommerceGears_Ga4: refund #' . $refundId . ' not sent: ' . $e->getMessage());
                 $result['failed']++;
                 $output && $output(sprintf('#%d failed: %s', $refundId, $e->getMessage()));
             }

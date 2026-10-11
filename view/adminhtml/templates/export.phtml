@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright © Softaware Commerce. All rights reserved.
+ * Copyright © CommerceGears. All rights reserved.
  */
 declare(strict_types=1);
 
 use Magento\Framework\Escaper;
-use Softaware\Ga4\Block\Adminhtml\Export;
+use CommerceGears\Ga4\Block\Adminhtml\Export;
 
 /** @var Export $block */
 /** @var Escaper $escaper */
@@ -67,7 +67,7 @@ $gtagStores = $block->countGtagStores();
             <tr><td><?= $escaper->escapeHtml(__('Tag')) ?></td><td>GA4 - Ecommerce events</td><td><?= $escaper->escapeHtml(implode(', ', $block->getEcommerceEvents())) ?></td></tr>
             <tr><td><?= $escaper->escapeHtml(__('Tag')) ?></td><td>GA4 - login and sign_up</td><td>login, sign_up (method)</td></tr>
             <tr><td><?= $escaper->escapeHtml(__('Tag')) ?></td><td>GA4 - search</td><td>search (search_term)</td></tr>
-            <tr><td><?= $escaper->escapeHtml(__('Trigger')) ?></td><td>CE - softaware_consent_update</td><td><?= $escaper->escapeHtml(__('For your own tags that should wait for Softaware Cookie Consent')) ?></td></tr>
+            <tr><td><?= $escaper->escapeHtml(__('Trigger')) ?></td><td>CE - commercegears_consent_update</td><td><?= $escaper->escapeHtml(__('For your own tags that should wait for CommerceGears Cookie Consent')) ?></td></tr>
             <tr><td><?= $escaper->escapeHtml(__('Variables')) ?></td><td colspan="2">Const - GA4 Measurement ID, DLV - method, DLV - search_term, DLV - user_data, DLV - sw_consent.analytics, DLV - sw_consent.marketing</td></tr>
         </tbody>
     </table>

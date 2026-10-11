@@ -1,10 +1,10 @@
 <?php
 /**
- * Copyright © Softaware Commerce. All rights reserved.
+ * Copyright © CommerceGears. All rights reserved.
  */
 declare(strict_types=1);
 
-namespace Softaware\Ga4\Controller\Adminhtml\Export;
+namespace CommerceGears\Ga4\Controller\Adminhtml\Export;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
@@ -14,7 +14,7 @@ use Magento\Framework\View\Result\PageFactory;
 
 class Index extends Action implements HttpGetActionInterface
 {
-    public const ADMIN_RESOURCE = 'Softaware_Ga4::export';
+    public const ADMIN_RESOURCE = 'CommerceGears_Ga4::export';
 
     public function __construct(Context $context, private readonly PageFactory $pageFactory)
     {
@@ -24,7 +24,7 @@ class Index extends Action implements HttpGetActionInterface
     public function execute(): Page
     {
         $page = $this->pageFactory->create();
-        $page->setActiveMenu('Softaware_Ga4::export');
+        $page->setActiveMenu('CommerceGears_Ga4::export');
         $page->getConfig()->getTitle()->prepend(__('GTM Container Export'));
         return $page;
     }

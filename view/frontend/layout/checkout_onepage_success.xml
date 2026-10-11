@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
-        <referenceBlock name="softaware.ga4.datalayer">
+        <referenceBlock name="commercegears.ga4.datalayer">
             <arguments>
                 <argument name="providers" xsi:type="array">
-                    <item name="purchase" xsi:type="object">Softaware\Ga4\Model\Event\Provider\Purchase</item>
+                    <item name="purchase" xsi:type="object">CommerceGears\Ga4\Model\Event\Provider\Purchase</item>
                 </argument>
             </arguments>
         </referenceBlock>

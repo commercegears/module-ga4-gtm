@@ -1,10 +1,10 @@
 <?php
 /**
- * Copyright © Softaware Commerce. All rights reserved.
+ * Copyright © CommerceGears. All rights reserved.
  */
 declare(strict_types=1);
 
-namespace Softaware\Ga4\Model;
+namespace CommerceGears\Ga4\Model;
 
 use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\Stdlib\Cookie\CookieMetadataFactory;
@@ -13,14 +13,14 @@ use Psr\Log\LoggerInterface;
 
 /**
  * Server-side queue for events that happen in POST/AJAX requests (add_to_cart, remove_from_cart, login, sign_up).
- * Stored in the session and delivered to the browser through the "softaware-ga4" customer-data section,
+ * Stored in the session and delivered to the browser through the "commercegears-ga4" customer-data section,
  * so it works with full-page cache, Luma AJAX carts and Hyvä. Events stay in the section for a while
  * (a section response can be lost when the page navigates away mid-request, e.g. Luma's cart update);
  * each has a unique id and the browser remembers delivered ids, so an event is pushed exactly once.
  */
 class EventQueue
 {
-    private const SESSION_KEY = 'softaware_ga4_events';
+    private const SESSION_KEY = 'commercegears_ga4_events';
     private const MAX_EVENTS = 20;
     private const LIFETIME = 1800;
 
@@ -64,7 +64,7 @@ class EventQueue
                     ->setSameSite('Lax')
             );
         } catch (\Throwable $e) {
-            $this->logger->debug('Softaware_Ga4: pending cookie not set: ' . $e->getMessage());
+            $this->logger->debug('CommerceGears_Ga4: pending cookie not set: ' . $e->getMessage());
         }
     }
 

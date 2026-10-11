@@ -1,22 +1,22 @@
 <?php
 /**
- * Copyright © Softaware Commerce. All rights reserved.
+ * Copyright © CommerceGears. All rights reserved.
  */
 declare(strict_types=1);
 
-namespace Softaware\Ga4\Observer;
+namespace CommerceGears\Ga4\Observer;
 
 use Magento\Catalog\Model\Product;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Psr\Log\LoggerInterface;
-use Softaware\Ga4\Model\Config;
-use Softaware\Ga4\Model\EventQueue;
-use Softaware\Ga4\Model\ItemBuilder;
+use CommerceGears\Ga4\Model\Config;
+use CommerceGears\Ga4\Model\EventQueue;
+use CommerceGears\Ga4\Model\ItemBuilder;
 
 /**
  * Queues add_to_wishlist when a customer adds a product to the wish list (Luma and Hyvä use the same controller).
- * Delivered through the softaware-ga4 customer-data section like add_to_cart.
+ * Delivered through the commercegears-ga4 customer-data section like add_to_cart.
  */
 class QueueWishlistAdd implements ObserverInterface
 {
@@ -44,7 +44,7 @@ class QueueWishlistAdd implements ObserverInterface
                 'items' => [$entry],
             ]);
         } catch (\Throwable $e) {
-            $this->logger->warning('Softaware_Ga4: could not track add_to_wishlist: ' . $e->getMessage());
+            $this->logger->warning('CommerceGears_Ga4: could not track add_to_wishlist: ' . $e->getMessage());
         }
     }
 }

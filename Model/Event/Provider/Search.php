@@ -1,13 +1,13 @@
 <?php
 /**
- * Copyright © Softaware Commerce. All rights reserved.
+ * Copyright © CommerceGears. All rights reserved.
  */
 declare(strict_types=1);
 
-namespace Softaware\Ga4\Model\Event\Provider;
+namespace CommerceGears\Ga4\Model\Event\Provider;
 
 use Magento\Search\Model\QueryFactory;
-use Softaware\Ga4\Api\PageEventProviderInterface;
+use CommerceGears\Ga4\Api\PageEventProviderInterface;
 
 /**
  * search on the search results page.

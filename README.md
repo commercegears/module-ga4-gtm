@@ -1,6 +1,6 @@
-# Softaware GA4 & Google Tag Manager for Magento 2
+# CommerceGears GA4 & Google Tag Manager for Magento 2
 
-`softaware/module-ga4-gtm` (`Softaware_Ga4`)
+`commercegears/module-ga4-gtm` (`CommerceGears_Ga4`)
 
 GA4 ecommerce tracking for Luma and Hyvä: Google Tag Manager or gtag.js, a complete GA4 dataLayer, Google Consent Mode,
 server-side refunds and a GTM container you can import in one step.
@@ -11,10 +11,10 @@ Documentation: [User guide](docs/user-guide.md) · [FAQ](docs/faq.md)
 
 - **Tags**: GTM container snippet in `<head>` plus `<noscript>` iframe after `<body>`, or gtag.js with a GA4
   measurement ID. Custom GTM script domain for server-side tagging. The `<noscript>` iframe is left out while
-  Softaware Cookie Consent is active, because visitors without JavaScript cannot give consent.
-- **Consent**: with *Softaware Cookie Consent* enabled the Consent Mode defaults come from that module (printed before
+  CommerceGears Cookie Consent is active, because visitors without JavaScript cannot give consent.
+- **Consent**: with *CommerceGears Cookie Consent* enabled the Consent Mode defaults come from that module (printed before
   the tag) and nothing else is needed. Without it you can set the defaults here (denied / granted / leave to your consent
-  tool). Optionally load GTM/gtag only after the visitor accepts "Analytics" or "Marketing" (needs Softaware Cookie Consent).
+  tool). Optionally load GTM/gtag only after the visitor accepts "Analytics" or "Marketing" (needs CommerceGears Cookie Consent).
 - **Events** (GA4 recommended names and item structure):
 
   | Event | Where | How |
@@ -36,48 +36,48 @@ Documentation: [User guide](docs/user-guide.md) · [FAQ](docs/faq.md)
   `discount`, `price`, `quantity`.
 - **No double counting**: cart changes are detected server-side by comparing each cart line with its stored quantity
   (so AJAX and full-page adds are counted once, and a guest cart merged at login is not counted). Events are delivered
-  through the private customer-data section `softaware-ga4` (full-page cache safe) and every event has an id that the
-  browser remembers. Purchase is flagged in `softaware_ga4_order` and never output twice. Cart events use the cart's
+  through the private customer-data section `commercegears-ga4` (full-page cache safe) and every event has an id that the
+  browser remembers. Purchase is flagged in `commercegears_ga4_order` and never output twice. Cart events use the cart's
   own currency; lines with a custom price (for example free gifts) are reported at that price, even when it is 0.
 - **Refunds**: the refund value follows the same "incl. tax / incl. shipping" settings as the purchase value, so a full
   refund cancels the purchase revenue exactly. Each queued refund is claimed before it is sent, so cron and
-  `softaware:ga4:refunds --send` running at the same time cannot send it twice.
-- **GTM container export**: *Softaware > GA4 & GTM > GTM Container Export* downloads a container with a Google tag,
-  GA4 event tags, custom event triggers and variables. Import with *Merge*. Also `bin/magento softaware:ga4:gtm-export`.
-- **Debug mode**: logs every push to the browser console (`[Softaware GA4] event`) and sets `debug_mode` for gtag.js.
+  `commercegears:ga4:refunds --send` running at the same time cannot send it twice.
+- **GTM container export**: *CommerceGears > GA4 & GTM > GTM Container Export* downloads a container with a Google tag,
+  GA4 event tags, custom event triggers and variables. Import with *Merge*. Also `bin/magento commercegears:ga4:gtm-export`.
+- **Debug mode**: logs every push to the browser console (`[CommerceGears GA4] event`) and sets `debug_mode` for gtag.js.
 
 ## Configuration
 
-*Stores > Configuration > Softaware > GA4 & Google Tag Manager* (website and store-view scopes):
+*Stores > Configuration > CommerceGears > GA4 & Google Tag Manager* (website and store-view scopes):
 
 - **General**: enabled, tag type (GTM / gtag.js), GTM container ID, GTM script domain, GA4 measurement ID,
-  load tags (immediately / after consent), Consent Mode defaults without Softaware Cookie Consent, debug mode.
+  load tags (immediately / after consent), Consent Mode defaults without CommerceGears Cookie Consent, debug mode.
 - **Ecommerce Data**: item ID (SKU / ID), brand attribute and default brand, item categories (deepest / first assigned
   category), affiliation, currency (shown/order currency or base currency), item prices incl. tax, purchase value incl.
   tax and incl. shipping, max items per list, enhanced conversions (user_data).
 - **Refunds (Measurement Protocol)**: send refunds, API secret (encrypted).
 
-ACL: `Softaware_Ga4::export`, `Softaware_Ga4::config`.
+ACL: `CommerceGears_Ga4::export`, `CommerceGears_Ga4::config`.
 
 ## For developers
 
 - Push your own events in the browser: `window.swGa4.push('add_to_wishlist', {currency: 'GBP', value: 10, items: [...]})`.
-- Queue an event server-side (delivered on the next section load): `Softaware\Ga4\Model\EventQueue::add($event, $params)`.
-- Register a product list for view_item_list/select_item: `Softaware\Ga4\Model\ListRegistry::add($id, $name, $products)`.
-- Add page events: implement `Softaware\Ga4\Api\PageEventProviderInterface` and add it to the `providers` argument of
-  block `softaware.ga4.datalayer` in a layout handle.
-- Build items: `Softaware\Ga4\Model\ItemBuilder::fromProduct()/fromQuoteItem()/fromOrderItem()`.
+- Queue an event server-side (delivered on the next section load): `CommerceGears\Ga4\Model\EventQueue::add($event, $params)`.
+- Register a product list for view_item_list/select_item: `CommerceGears\Ga4\Model\ListRegistry::add($id, $name, $products)`.
+- Add page events: implement `CommerceGears\Ga4\Api\PageEventProviderInterface` and add it to the `providers` argument of
+  block `commercegears.ga4.datalayer` in a layout handle.
+- Build items: `CommerceGears\Ga4\Model\ItemBuilder::fromProduct()/fromQuoteItem()/fromOrderItem()`.
 
 ## CLI
 
-- `bin/magento softaware:ga4:refunds` – list queued refunds; `--send` sends pending ones now; `--dry-run` prints the payloads.
-- `bin/magento softaware:ga4:gtm-export [--store=default] [--output=container.json]`.
+- `bin/magento commercegears:ga4:refunds` – list queued refunds; `--send` sends pending ones now; `--dry-run` prints the payloads.
+- `bin/magento commercegears:ga4:gtm-export [--store=default] [--output=container.json]`.
 
 ## Compatibility
 
 Magento Open Source / Adobe Commerce 2.4.7–2.4.9, PHP 8.2–8.5, Luma/Blank and Hyvä 1.3+ (no compatibility module
-needed; the Hyvä checkout uses the Luma checkout). Requires `softaware/module-core`. Works with or without
-`softaware/module-cookie-consent`.
+needed; the Hyvä checkout uses the Luma checkout). Requires `commercegears/module-core`. Works with or without
+`commercegears/module-cookie-consent`.
 
 ## Limitations
 

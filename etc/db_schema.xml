@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
-    <table name="softaware_ga4_order" resource="default" engine="innodb" comment="Softaware GA4: per-order tracking state">
+    <table name="commercegears_ga4_order" resource="default" engine="innodb" comment="CommerceGears GA4: per-order tracking state">
         <column xsi:type="int" name="order_id" unsigned="true" nullable="false" comment="Order entity id"/>
         <column xsi:type="varchar" name="ga_client_id" nullable="true" length="64" comment="GA client id from the _ga cookie"/>
         <column xsi:type="varchar" name="ga_session_id" nullable="true" length="32" comment="GA4 session id"/>
@@ -9,10 +9,10 @@
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="order_id"/>
         </constraint>
-        <constraint xsi:type="foreign" referenceId="SOFTAWARE_GA4_ORDER_ORDER_ID_SALES_ORDER_ENTITY_ID"
-                    table="softaware_ga4_order" column="order_id" referenceTable="sales_order" referenceColumn="entity_id" onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="COMMERCEGEARS_GA4_ORDER_ORDER_ID_SALES_ORDER_ENTITY_ID"
+                    table="commercegears_ga4_order" column="order_id" referenceTable="sales_order" referenceColumn="entity_id" onDelete="CASCADE"/>
     </table>
-    <table name="softaware_ga4_refund" resource="default" engine="innodb" comment="Softaware GA4: refund events waiting for / sent via Measurement Protocol">
+    <table name="commercegears_ga4_refund" resource="default" engine="innodb" comment="CommerceGears GA4: refund events waiting for / sent via Measurement Protocol">
         <column xsi:type="int" name="refund_id" unsigned="true" nullable="false" identity="true" comment="Refund queue id"/>
         <column xsi:type="int" name="order_id" unsigned="true" nullable="false" comment="Order entity id"/>
         <column xsi:type="int" name="creditmemo_id" unsigned="true" nullable="false" comment="Credit memo entity id"/>
@@ -26,12 +26,12 @@
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="refund_id"/>
         </constraint>
-        <constraint xsi:type="unique" referenceId="SOFTAWARE_GA4_REFUND_CREDITMEMO_ID">
+        <constraint xsi:type="unique" referenceId="COMMERCEGEARS_GA4_REFUND_CREDITMEMO_ID">
             <column name="creditmemo_id"/>
         </constraint>
-        <constraint xsi:type="foreign" referenceId="SOFTAWARE_GA4_REFUND_CREDITMEMO_ID_SALES_CREDITMEMO_ENTITY_ID"
-                    table="softaware_ga4_refund" column="creditmemo_id" referenceTable="sales_creditmemo" referenceColumn="entity_id" onDelete="CASCADE"/>
-        <index referenceId="SOFTAWARE_GA4_REFUND_STATUS" indexType="btree">
+        <constraint xsi:type="foreign" referenceId="COMMERCEGEARS_GA4_REFUND_CREDITMEMO_ID_SALES_CREDITMEMO_ENTITY_ID"
+                    table="commercegears_ga4_refund" column="creditmemo_id" referenceTable="sales_creditmemo" referenceColumn="entity_id" onDelete="CASCADE"/>
+        <index referenceId="COMMERCEGEARS_GA4_REFUND_STATUS" indexType="btree">
             <column name="status"/>
         </index>
     </table>

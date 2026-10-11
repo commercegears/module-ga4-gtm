@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
     <system>
-        <section id="softaware_ga4" translate="label" sortOrder="35" showInDefault="1" showInWebsite="1" showInStore="1">
+        <section id="commercegears_ga4" translate="label" sortOrder="35" showInDefault="1" showInWebsite="1" showInStore="1">
             <class>separator-top</class>
             <label>GA4 &amp; Google Tag Manager</label>
-            <tab>softaware</tab>
-            <resource>Softaware_Ga4::config</resource>
+            <tab>commercegears</tab>
+            <resource>CommerceGears_Ga4::config</resource>
             <group id="general" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>General</label>
                 <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
@@ -16,12 +16,12 @@
                 <field id="mode" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Tag Type</label>
                     <comment>Google Tag Manager: events go to the dataLayer for your GTM tags (use the GTM Container Export to set them up). gtag.js: events are sent straight to GA4.</comment>
-                    <source_model>Softaware\Ga4\Model\Config\Source\Mode</source_model>
+                    <source_model>CommerceGears\Ga4\Model\Config\Source\Mode</source_model>
                 </field>
                 <field id="gtm_id" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>GTM Container ID</label>
                     <comment>For example GTM-AB12CDE. Find it at the top of your Google Tag Manager workspace.</comment>
-                    <backend_model>Softaware\Ga4\Model\Config\Backend\GtmId</backend_model>
+                    <backend_model>CommerceGears\Ga4\Model\Config\Backend\GtmId</backend_model>
                     <depends>
                         <field id="mode">gtm</field>
                     </depends>
@@ -29,7 +29,7 @@
                 <field id="gtm_url" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>GTM Script Domain</label>
                     <comment>Change only for server-side tagging (for example https://sgtm.example.com). Default: https://www.googletagmanager.com</comment>
-                    <backend_model>Softaware\Ga4\Model\Config\Backend\HttpsUrl</backend_model>
+                    <backend_model>CommerceGears\Ga4\Model\Config\Backend\HttpsUrl</backend_model>
                     <depends>
                         <field id="mode">gtm</field>
                     </depends>
@@ -37,17 +37,17 @@
                 <field id="measurement_id" translate="label comment" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>GA4 Measurement ID</label>
                     <comment>For example G-AB12CD34EF (GA4 Admin &gt; Data streams). Required for gtag.js and refunds; also written into the GTM container export.</comment>
-                    <backend_model>Softaware\Ga4\Model\Config\Backend\MeasurementId</backend_model>
+                    <backend_model>CommerceGears\Ga4\Model\Config\Backend\MeasurementId</backend_model>
                 </field>
                 <field id="load_after_consent" translate="label comment" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Load Tags</label>
-                    <comment>Default: Immediately, with Google Consent Mode (recommended). The other options need Softaware Cookie Consent and load GTM or gtag.js only after the visitor accepts that category; they are ignored when Cookie Consent is disabled.</comment>
-                    <source_model>Softaware\Ga4\Model\Config\Source\LoadCondition</source_model>
+                    <comment>Default: Immediately, with Google Consent Mode (recommended). The other options need CommerceGears Cookie Consent and load GTM or gtag.js only after the visitor accepts that category; they are ignored when Cookie Consent is disabled.</comment>
+                    <source_model>CommerceGears\Ga4\Model\Config\Source\LoadCondition</source_model>
                 </field>
                 <field id="consent_default" translate="label comment" type="select" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                    <label>Consent Mode Defaults (Without Softaware Cookie Consent)</label>
-                    <comment>Only used when Softaware Cookie Consent is not enabled. Choose "Denied" if another consent tool sends gtag('consent', 'update', ...) but does not set the defaults itself.</comment>
-                    <source_model>Softaware\Ga4\Model\Config\Source\ConsentDefault</source_model>
+                    <label>Consent Mode Defaults (Without CommerceGears Cookie Consent)</label>
+                    <comment>Only used when CommerceGears Cookie Consent is not enabled. Choose "Denied" if another consent tool sends gtag('consent', 'update', ...) but does not set the defaults itself.</comment>
+                    <source_model>CommerceGears\Ga4\Model\Config\Source\ConsentDefault</source_model>
                 </field>
                 <field id="debug" translate="label comment" type="select" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Debug Mode</label>
@@ -60,12 +60,12 @@
                 <field id="item_id" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Item ID</label>
                     <comment>Use the same identifier as your Google Merchant Center feed. Configurable products report the parent; the chosen variant SKU goes into item_variant.</comment>
-                    <source_model>Softaware\Ga4\Model\Config\Source\ItemId</source_model>
+                    <source_model>CommerceGears\Ga4\Model\Config\Source\ItemId</source_model>
                 </field>
                 <field id="brand_attribute" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Brand Attribute</label>
                     <comment>Product attribute for item_brand. Default: Manufacturer.</comment>
-                    <source_model>Softaware\Ga4\Model\Config\Source\ProductAttributes</source_model>
+                    <source_model>CommerceGears\Ga4\Model\Config\Source\ProductAttributes</source_model>
                 </field>
                 <field id="default_brand" translate="label comment" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Default Brand</label>
@@ -75,7 +75,7 @@
                 <field id="category_path" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Item Categories</label>
                     <comment>item_category to item_category5 from the category tree (root category excluded).</comment>
-                    <source_model>Softaware\Ga4\Model\Config\Source\CategoryPath</source_model>
+                    <source_model>CommerceGears\Ga4\Model\Config\Source\CategoryPath</source_model>
                 </field>
                 <field id="affiliation" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Affiliation</label>
@@ -85,7 +85,7 @@
                 <field id="currency" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Currency</label>
                     <comment>Currency of value, price and tax in all events. Default: the currency the customer sees.</comment>
-                    <source_model>Softaware\Ga4\Model\Config\Source\Currency</source_model>
+                    <source_model>CommerceGears\Ga4\Model\Config\Source\Currency</source_model>
                 </field>
                 <field id="price_incl_tax" translate="label comment" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Item Prices Include Tax</label>

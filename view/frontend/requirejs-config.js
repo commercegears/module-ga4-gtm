@@ -5,10 +5,10 @@ var config = {
     config: {
         mixins: {
             'Magento_Checkout/js/action/set-shipping-information': {
-                'Softaware_Ga4/js/mixin/set-shipping-information': true
+                'CommerceGears_Ga4/js/mixin/set-shipping-information': true
             },
             'Magento_Checkout/js/action/select-payment-method': {
-                'Softaware_Ga4/js/mixin/select-payment-method': true
+                'CommerceGears_Ga4/js/mixin/select-payment-method': true
             }
         }
     }
