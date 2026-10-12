@@ -5,7 +5,7 @@ Mode, refunds sent from the server through the Measurement Protocol, and a GTM c
 This guide covers installation, every setting and day-to-day use.
 
 - Admin demo: https://demo.commercegears.com/try-admin/ga4-gtm
-- Composer access: https://commercegears.com/shop/composer-access/
+- Composer access: https://commercegears.com/composer-access/
 - Changelog: [CHANGELOG.md](../CHANGELOG.md) · Questions: [FAQ](faq.md)
 
 ![add_to_cart event in the dataLayer after adding a product on Luma](images/luma-add-to-cart.png)
@@ -24,7 +24,7 @@ This guide covers installation, every setting and day-to-day use.
 ## 2. Installation
 
 With Composer. Use the Composer keys from your account on commercegears.com (see
-https://commercegears.com/shop/composer-access/):
+https://commercegears.com/composer-access/):
 
 ```bash
 composer config repositories.commercegears composer https://repo.commercegears.com
