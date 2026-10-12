@@ -75,7 +75,7 @@ ACL: `CommerceGears_Ga4::export`, `CommerceGears_Ga4::config`.
 
 ## Compatibility
 
-Magento Open Source / Adobe Commerce 2.4.7–2.4.9, PHP 8.2–8.5, Luma/Blank and Hyvä 1.3+ (no compatibility module
+Magento Open Source / Adobe Commerce 2.4.6–2.4.9, PHP 8.2–8.5 (Magento 2.4.6: PHP 8.2), Luma/Blank and Hyvä 1.3+ (no compatibility module
 needed; the Hyvä checkout uses the Luma checkout). Requires `commercegears/module-core`. Works with or without
 `commercegears/module-cookie-consent`.
 
