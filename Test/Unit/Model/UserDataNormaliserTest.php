@@ -67,6 +67,8 @@ class UserDataNormaliserTest extends TestCase
         return [
             'international with spaces' => ['+44 20 7946 0000', 'GB', '+442079460000'],
             'international with 00' => ['0044 7700 900123', 'GB', '+447700900123'],
+            'international with (0) trunk' => ['+44 (0)20 7946 0000', 'GB', '+442079460000'],
+            'Germany international with (0)' => ['+49 (0)30 1234567', 'DE', '+49301234567'],
             'UK national' => ['07700 900123', 'GB', '+447700900123'],
             'UK without 0' => ['7700 900123', 'GB', '+447700900123'],
             'UK with code, no plus' => ['447700900123', 'GB', '+447700900123'],

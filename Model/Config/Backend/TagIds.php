@@ -40,7 +40,7 @@ class TagIds extends Value
                     $id
                 ));
             }
-            if (preg_match('/^(?:G|GT)-X+$/', $id)) {
+            if (preg_match('/^(?:G|GT)-X+$/', $id) || $id === 'AW-123456789') {
                 throw new LocalizedException(__('"%1" is the example from the instructions. Enter the ID of your Google tag.', $id));
             }
         }

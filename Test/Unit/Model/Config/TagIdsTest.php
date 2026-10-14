@@ -44,6 +44,7 @@ class TagIdsTest extends TestCase
             'universal analytics' => ['UA-1234567-1'],
             'Ads label snippet' => ['AW-18506289930/AbCdEfGh'],
             'placeholder' => ['G-XXXXXXXXXX'],
+            'Google Ads example' => ['AW-123456789'],
             'too many' => [implode(',', array_map(static fn (int $i): string => 'AW-10000000' . $i, range(0, 10)))],
         ];
     }

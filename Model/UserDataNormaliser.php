@@ -96,7 +96,8 @@ class UserDataNormaliser
      */
     public function phone(string $phone, string $countryId = ''): string
     {
-        $phone = trim($phone);
+        // "+44 (0)20 ..." / "+49 (0)30 ...": the bracketed trunk 0 is not dialled with the country code.
+        $phone = trim(str_replace('(0)', '', $phone));
         $international = str_starts_with($phone, '+');
         $digits = preg_replace('/\D+/', '', $phone) ?? '';
         if ($digits === '') {
