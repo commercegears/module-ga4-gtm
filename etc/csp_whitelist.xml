@@ -6,6 +6,9 @@
                 <value id="sw_ga4_gtm" type="host">*.googletagmanager.com</value>
                 <value id="sw_ga4_ga" type="host">*.google-analytics.com</value>
                 <value id="sw_ga4_analytics" type="host">*.analytics.google.com</value>
+                <value id="sw_ga4_ads" type="host">*.googleadservices.com</value>
+                <value id="sw_ga4_doubleclick" type="host">*.g.doubleclick.net</value>
+                <value id="sw_ga4_google" type="host">www.google.com</value>
             </values>
         </policy>
         <policy id="connect-src">
@@ -14,6 +17,8 @@
                 <value id="sw_ga4_ga" type="host">*.google-analytics.com</value>
                 <value id="sw_ga4_analytics" type="host">*.analytics.google.com</value>
                 <value id="sw_ga4_doubleclick" type="host">*.g.doubleclick.net</value>
+                <value id="sw_ga4_ads" type="host">*.googleadservices.com</value>
+                <value id="sw_ga4_google" type="host">www.google.com</value>
             </values>
         </policy>
         <policy id="img-src">
@@ -22,11 +27,14 @@
                 <value id="sw_ga4_ga" type="host">*.google-analytics.com</value>
                 <value id="sw_ga4_analytics" type="host">*.analytics.google.com</value>
                 <value id="sw_ga4_doubleclick" type="host">*.g.doubleclick.net</value>
+                <value id="sw_ga4_ads" type="host">*.googleadservices.com</value>
+                <value id="sw_ga4_google" type="host">www.google.com</value>
             </values>
         </policy>
         <policy id="frame-src">
             <values>
                 <value id="sw_ga4_gtm" type="host">*.googletagmanager.com</value>
+                <value id="sw_ga4_td" type="host">td.doubleclick.net</value>
             </values>
         </policy>
     </policies>

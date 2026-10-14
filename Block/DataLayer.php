@@ -53,9 +53,33 @@ class DataLayer extends Template
         return $this->json->serialize([
             'mode' => $this->config->getMode(),
             'debug' => $this->config->isDebug(),
+            // user_data waits for ad_user_data consent when CommerceGears Cookie Consent is active.
+            'consentGate' => $this->config->isCookieConsentActive(),
+            'sendTo' => $this->getSendTo(),
             'events' => $this->collectEvents(),
             'lists' => $this->collectLists(),
         ]);
+    }
+
+    /**
+     * gtag.js with additional Google tag IDs: events go to the GA4 measurement IDs only (main and additional G- IDs),
+     * never to Google Ads, so no Ads conversion can be counted from them. Empty = gtag default (unchanged behaviour).
+     *
+     * @return string[]
+     */
+    private function getSendTo(): array
+    {
+        $additional = $this->config->getMode() === Config::MODE_GTAG ? $this->config->getAdditionalTagIds() : [];
+        if (!$additional) {
+            return [];
+        }
+        $sendTo = [$this->config->getMeasurementId()];
+        foreach ($additional as $id) {
+            if (str_starts_with($id, 'G-')) {
+                $sendTo[] = $id;
+            }
+        }
+        return $sendTo;
     }
 
     /**

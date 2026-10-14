@@ -78,6 +78,40 @@ class Config
             : $this->getMeasurementId($store) !== '';
     }
 
+    /**
+     * Extra Google tag IDs (Google Ads AW-, Floodlight DC-, Google tag GT-, other GA4 G-) for gtag.js mode, in the
+     * order entered, without the main measurement ID and without duplicates. Invalid entries are skipped.
+     *
+     * @return string[]
+     */
+    public function getAdditionalTagIds(int|string|null $store = null): array
+    {
+        $main = strtoupper($this->getMeasurementId($store));
+        return array_values(array_filter(
+            self::parseTagIds($this->getValue('general/additional_tag_ids', $store)),
+            static fn (string $id): bool => self::isValidTagId($id) && $id !== $main
+        ));
+    }
+
+    /**
+     * Splits a comma, space or line separated list of tag IDs, upper-cased and de-duplicated.
+     *
+     * @return string[]
+     */
+    public static function parseTagIds(string $value): array
+    {
+        $ids = preg_split('/[\s,;]+/', strtoupper($value), -1, PREG_SPLIT_NO_EMPTY) ?: [];
+        return array_values(array_unique($ids));
+    }
+
+    /**
+     * G-XXXXXXX (GA4), AW-123456789 (Google Ads), DC-1234567 (Floodlight) or GT-XXXXXXX (Google tag).
+     */
+    public static function isValidTagId(string $id): bool
+    {
+        return (bool)preg_match('/^(?:G-[A-Z0-9]{4,15}|AW-\d{6,15}|DC-\d{5,15}|GT-[A-Z0-9]{4,15})$/', $id);
+    }
+
     public function isDebug(int|string|null $store = null): bool
     {
         return $this->getFlag('general/debug', $store);
@@ -169,6 +203,14 @@ class Config
     {
         $max = (int)$this->getValue('data/max_list_items', $store);
         return $max > 0 ? min($max, 200) : 50;
+    }
+
+    /**
+     * No purchase event for orders whose purchase value is 0 (the order is still marked as tracked).
+     */
+    public function isSkipZeroValue(int|string|null $store = null): bool
+    {
+        return $this->getFlag('data/skip_zero_value', $store);
     }
 
     public function isUserDataEnabled(int|string|null $store = null): bool

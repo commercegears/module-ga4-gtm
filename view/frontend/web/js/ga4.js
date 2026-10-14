@@ -7,6 +7,8 @@
  *   3. clicks on product links inside tracked lists (select_item)
  *   4. Luma checkout mixins (add_shipping_info, add_payment_info) via window.swGa4.push()
  * Every queued event has an id; delivered ids are remembered in localStorage so nothing is counted twice.
+ * Enhanced conversions: with CommerceGears Cookie Consent active, user_data is only set (gtag 'set' / dataLayer) once the
+ * visitor has granted ad_user_data; when consent comes later on the same page it is set then, without repeating events.
  */
 (function () {
     'use strict';
@@ -24,6 +26,9 @@
     }
     var mode = data.mode || 'gtm';
     var debug = !!data.debug;
+    var consentGate = !!data.consentGate;
+    var sendTo = Array.isArray(data.sendTo) && data.sendTo.length ? data.sendTo : null;
+    var pendingUserData = null;
     var SEEN_KEY = 'sw_ga4_seen';
     var ECOMMERCE = ['view_item_list', 'select_item', 'view_item', 'add_to_cart', 'remove_from_cart', 'view_cart',
         'begin_checkout', 'add_shipping_info', 'add_payment_info', 'purchase', 'refund', 'add_to_wishlist'];
@@ -58,6 +63,39 @@
     }
 
     /**
+     * ad_user_data granted? Always true without CommerceGears Cookie Consent (another consent tool or Consent Mode
+     * decides). With it, true only after the visitor accepted the category that controls ad_user_data (Marketing).
+     */
+    function userDataAllowed() {
+        if (!consentGate) {
+            return true;
+        }
+        var cc = w.SwConsent;
+        if (!cc || typeof cc.consentTypes !== 'function') {
+            return false;
+        }
+        var granted = cc.state && Array.isArray(cc.state.c) ? cc.state.c : ((cc.config && cc.config.required) || []);
+        return cc.consentTypes(granted).ad_user_data === 'granted';
+    }
+
+    function applyUserData(userData, standalone) {
+        if (mode === 'gtag') {
+            w.gtag('set', 'user_data', userData);
+        } else if (standalone) {
+            w.dataLayer.push({ event: 'commercegears_user_data', user_data: userData });
+        }
+        log('user_data', {}, standalone ? 'set after consent' : '');
+    }
+
+    d.addEventListener('sw-consent:change', function () {
+        if (pendingUserData && userDataAllowed()) {
+            var userData = pendingUserData;
+            pendingUserData = null;
+            applyUserData(userData, true);
+        }
+    });
+
+    /**
      * @param {string} name   GA4 event name
      * @param {Object} params event parameters (items, value, currency ...)
      * @param {Object} [extra] top-level keys such as user_data
@@ -76,14 +114,37 @@
         }
         params = params || {};
         extra = extra || {};
+        var key, original = params;
+        if (extra.user_data) {
+            var rest = {};
+            for (key in extra) {
+                if (Object.prototype.hasOwnProperty.call(extra, key) && key !== 'user_data') { rest[key] = extra[key]; }
+            }
+            if (userDataAllowed()) {
+                pendingUserData = null;
+                if (mode === 'gtag') {
+                    applyUserData(extra.user_data, false); // before the event
+                } else {
+                    rest.user_data = extra.user_data;
+                }
+            } else {
+                pendingUserData = extra.user_data; // set once ad_user_data is granted on this page
+                log('user_data', {}, 'waiting for ad_user_data consent');
+            }
+            extra = rest;
+        }
         if (mode === 'gtag') {
-            if (extra.user_data) {
-                w.gtag('set', 'user_data', extra.user_data);
+            if (sendTo && !params.send_to) {
+                var copy = {};
+                for (key in params) {
+                    if (Object.prototype.hasOwnProperty.call(params, key)) { copy[key] = params[key]; }
+                }
+                copy.send_to = sendTo;
+                params = copy;
             }
             w.gtag('event', name, params);
         } else {
             var entry = { event: name };
-            var key;
             if (ECOMMERCE.indexOf(name) !== -1) {
                 w.dataLayer.push({ ecommerce: null });
                 entry.ecommerce = params;
@@ -97,9 +158,9 @@
             }
             w.dataLayer.push(entry);
         }
-        log(name, params, extra);
+        log(name, original, extra);
         if (name === 'begin_checkout') {
-            api.checkout = params;
+            api.checkout = original;
         }
         return true;
     }

@@ -39,6 +39,14 @@
                     <comment>For example G-AB12CD34EF (GA4 Admin &gt; Data streams). Required for gtag.js and refunds; also written into the GTM container export.</comment>
                     <backend_model>CommerceGears\Ga4\Model\Config\Backend\MeasurementId</backend_model>
                 </field>
+                <field id="additional_tag_ids" translate="label comment" type="text" sortOrder="55" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Additional Google Tag IDs</label>
+                    <comment>Comma-separated, for example AW-123456789 for Google Ads. Each ID is configured after the GA4 measurement ID, so the Google Ads conversion linker can store the ad click (only when ad_storage consent is granted). Ecommerce events still go to GA4 only; no Google Ads conversion events are added. Allowed: G-, AW-, DC- and GT- IDs. Default: empty.</comment>
+                    <backend_model>CommerceGears\Ga4\Model\Config\Backend\TagIds</backend_model>
+                    <depends>
+                        <field id="mode">gtag</field>
+                    </depends>
+                </field>
                 <field id="load_after_consent" translate="label comment" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Load Tags</label>
                     <comment>Default: Immediately, with Google Consent Mode (recommended). The other options need CommerceGears Cookie Consent and load GTM or gtag.js only after the visitor accepts that category; they are ignored when Cookie Consent is disabled.</comment>
@@ -94,12 +102,12 @@
                 </field>
                 <field id="value_incl_tax" translate="label comment" type="select" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Purchase Value Includes Tax</label>
-                    <comment>Tax is always sent separately in the tax parameter as well.</comment>
+                    <comment>The value is the order grand total after discounts; No leaves tax out (net revenue). Tax is always sent separately in the tax parameter as well. Default: Yes.</comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="value_incl_shipping" translate="label comment" type="select" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Purchase Value Includes Shipping</label>
-                    <comment>Shipping is always sent separately in the shipping parameter as well.</comment>
+                    <comment>Shipping is always sent separately in the shipping parameter as well. Default: Yes.</comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="max_list_items" translate="label comment" type="text" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
@@ -107,9 +115,14 @@
                     <comment>Keeps the dataLayer small on long category pages. Default: 50; GA4 accepts up to 200 items per event.</comment>
                     <validate>validate-digits validate-digits-range digits-range-1-200</validate>
                 </field>
+                <field id="skip_zero_value" translate="label comment" type="select" sortOrder="85" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Skip Zero-value Orders</label>
+                    <comment>No purchase event for orders whose purchase value is 0 (for example free products). Such orders are still marked as handled, so they are never sent later. Default: No.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
                 <field id="user_data" translate="label comment" type="select" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Enhanced Conversions (user_data)</label>
-                    <comment>Adds SHA-256 hashed email, phone and name (plus city, postcode and country) as user_data to purchase, sign_up and login. Only enable if your privacy policy covers it.</comment>
+                    <comment>Adds SHA-256 hashed email, phone, name and street (plus city, region, postcode and country) as user_data to purchase, sign_up and login. With CommerceGears Cookie Consent it is only set after the visitor accepts the category for ad_user_data (Marketing). Only enable if your privacy policy covers it. Default: No.</comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
             </group>

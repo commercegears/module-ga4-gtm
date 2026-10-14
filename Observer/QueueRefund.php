@@ -12,6 +12,7 @@ use Magento\Framework\Serialize\Serializer\Json;
 use Magento\Sales\Model\Order\Creditmemo;
 use Psr\Log\LoggerInterface;
 use CommerceGears\Ga4\Model\Config;
+use CommerceGears\Ga4\Model\PurchaseValue;
 use CommerceGears\Ga4\Model\ItemBuilder;
 use CommerceGears\Ga4\Model\ResourceModel\RefundQueue;
 
@@ -58,17 +59,11 @@ class QueueRefund implements ObserverInterface
             $tax = (float)($base ? $creditmemo->getBaseTaxAmount() : $creditmemo->getTaxAmount());
             $shipping = (float)($base ? $creditmemo->getBaseShippingAmount() : $creditmemo->getShippingAmount());
             $shippingInclTax = (float)($base ? $creditmemo->getBaseShippingInclTax() : $creditmemo->getShippingInclTax());
-            $value = $grandTotal;
-            if (!$inclShipping) {
-                $value -= $inclTax ? $shippingInclTax : $shipping;
-            }
-            if (!$inclTax) {
-                $value -= $tax;
-            }
+            $value = PurchaseValue::compute($grandTotal, $tax, $shipping, $shippingInclTax, $inclTax, $inclShipping);
             $params = [
                 'currency' => $base ? (string)$order->getBaseCurrencyCode() : (string)$order->getOrderCurrencyCode(),
                 'transaction_id' => (string)$order->getIncrementId(),
-                'value' => round(max(0.0, $value), 2),
+                'value' => $value,
                 'tax' => round($tax, 2),
                 'shipping' => round($inclTax ? $shippingInclTax : $shipping, 2),
                 'affiliation' => $this->config->getAffiliation($storeId),

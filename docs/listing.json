@@ -8,7 +8,8 @@
     "Google Consent Mode, with or without CommerceGears Cookie Consent",
     "Refunds sent from the server via the Measurement Protocol",
     "Ready-to-import GTM container",
-    "Optional enhanced conversions (hashed user_data)"
+    "Google Ads tag IDs for GA4 conversion import (gtag.js)",
+    "Optional enhanced conversions, only after Marketing consent"
   ],
   "benefits": [
     {
@@ -81,6 +82,7 @@
       "items": [
         "GTM snippet in the head plus noscript iframe, or gtag.js",
         "Custom GTM script domain for server-side tagging",
+        "Additional Google tag IDs (Google Ads AW-, G-, DC-, GT-) configured after GA4 in gtag.js mode",
         "Consent Mode defaults: from CommerceGears Cookie Consent, denied, granted or left to your consent tool",
         "Load tags only after Analytics or Marketing consent (with CommerceGears Cookie Consent)",
         "Debug mode: console log of every push and GA4 DebugView"
@@ -92,8 +94,10 @@
         "Cart changes compared with the stored quantity per line",
         "Event ids remembered in the browser, no double pushes",
         "Purchase flagged per order in the database",
+        "Optional: no purchase event for zero-value (free) orders",
         "Refund value follows the purchase value rules (tax, shipping)",
-        "Free gifts and custom prices reported at the cart price"
+        "Free gifts and custom prices reported at the cart price",
+        "Enhanced conversions hashed after Google's normalisation rules, set only with ad_user_data consent"
       ]
     },
     {

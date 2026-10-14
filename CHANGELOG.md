@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.1.0 (2026-10-14)
+- New: Additional Google Tag IDs (such as Google Ads AW-) for Ads conversions imported from GA4.
+- New: Skip Zero-value Orders setting, so free orders send no purchase event.
+- Improvement: enhanced conversions data is only set after Marketing consent, also on the success page.
+- Fix: enhanced conversions data follows Google's rules; local phone numbers now count too.
+
 ## 2.0.2 (2026-10-12)
 - Improvement: compatible with Magento 2.4.6 (PHP 8.2).
 

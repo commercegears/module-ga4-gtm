@@ -88,8 +88,13 @@ class Tag extends Template
         } else {
             $id = $this->json->serialize($this->getMeasurementId());
             $settings = $this->config->isDebug() ? '{debug_mode: true}' : '{}';
-            $load = 'gtag("js", new Date()); gtag("config", ' . $id . ', ' . $settings . ');'
-                . 'var j = document.createElement("script"); j.async = true;'
+            $load = 'gtag("js", new Date()); gtag("config", ' . $id . ', ' . $settings . ');';
+            // Google Ads (AW-) and other Google tags: the page-level config only, so the conversion linker can set
+            // _gcl_au/_gcl_aw when ad_storage is granted. Ecommerce events still go to GA4 only (see ga4.js).
+            foreach ($this->config->getAdditionalTagIds() as $tagId) {
+                $load .= ' gtag("config", ' . $this->json->serialize($tagId) . ');';
+            }
+            $load .= 'var j = document.createElement("script"); j.async = true;'
                 . 'j.src = "https://www.googletagmanager.com/gtag/js?id=" + ' . $id . ';'
                 . 'document.head.appendChild(j);';
         }

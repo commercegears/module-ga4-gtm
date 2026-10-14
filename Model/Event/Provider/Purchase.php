@@ -11,11 +11,14 @@ use Magento\Sales\Model\Order;
 use CommerceGears\Ga4\Api\PageEventProviderInterface;
 use CommerceGears\Ga4\Model\Config;
 use CommerceGears\Ga4\Model\ItemBuilder;
+use CommerceGears\Ga4\Model\PurchaseValue;
 use CommerceGears\Ga4\Model\ResourceModel\OrderTracking;
 use CommerceGears\Ga4\Model\UserData;
 
 /**
- * purchase on the order success page, output once per order (reloading the page does not repeat it).
+ * purchase on the order success page, output once per order: the order is flagged in commercegears_ga4_order before
+ * the event is rendered, so a reload, the back button or a second tab never repeat it. All values come from the
+ * order of the checkout session, never from the URL.
  */
 class Purchase implements PageEventProviderInterface
 {
@@ -35,7 +38,12 @@ class Purchase implements PageEventProviderInterface
         if (!$order || !$order->getId() || !$this->orderTracking->markPurchaseTracked((int)$order->getId())) {
             return [];
         }
-        return [$this->build($order)];
+        $event = $this->build($order);
+        // Free orders (for example a free extension) can be left out; the order stays flagged, so it never fires later.
+        if ($this->config->isSkipZeroValue((int)$order->getStoreId()) && PurchaseValue::isZero((float)$event['params']['value'])) {
+            return [];
+        }
+        return [$event];
     }
 
     /**
@@ -52,13 +60,7 @@ class Purchase implements PageEventProviderInterface
         $tax = (float)($base ? $order->getBaseTaxAmount() : $order->getTaxAmount());
         $shipping = (float)($base ? $order->getBaseShippingAmount() : $order->getShippingAmount());
         $shippingInclTax = (float)($base ? $order->getBaseShippingInclTax() : $order->getShippingInclTax());
-        $value = $grandTotal;
-        if (!$inclShipping) {
-            $value -= $inclTax ? $shippingInclTax : $shipping;
-        }
-        if (!$inclTax) {
-            $value -= $tax;
-        }
+        $value = PurchaseValue::compute($grandTotal, $tax, $shipping, $shippingInclTax, $inclTax, $inclShipping);
 
         $items = [];
         $productIds = [];
@@ -73,7 +75,7 @@ class Purchase implements PageEventProviderInterface
             'transaction_id' => (string)$order->getIncrementId(),
             'affiliation' => $this->config->getAffiliation($storeId),
             'currency' => $base ? (string)$order->getBaseCurrencyCode() : (string)$order->getOrderCurrencyCode(),
-            'value' => round(max(0.0, $value), 2),
+            'value' => $value,
             'tax' => round($tax, 2),
             'shipping' => round($inclTax ? $shippingInclTax : $shipping, 2),
         ];

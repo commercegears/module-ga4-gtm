@@ -75,6 +75,7 @@ and per store view.
 | GTM Container ID | For example GTM-AB12CDE (top of your GTM workspace). Shown for Google Tag Manager only. The placeholder GTM-XXXXXXX is refused. |
 | GTM Script Domain | Change only for server-side tagging (for example https://sgtm.example.com). Default: https://www.googletagmanager.com |
 | GA4 Measurement ID | For example G-AB12CD34EF (GA4 Admin > Data streams). Required for gtag.js and refunds; also written into the GTM container export. The placeholder G-XXXXXXXXXX is refused. |
+| Additional Google Tag IDs | Shown for gtag.js only. Comma-separated IDs such as AW-123456789 (Google Ads), G- (another GA4 property), DC- (Floodlight) or GT- (Google tag). Each gets `gtag('config', ID)` after the GA4 measurement ID, so the Google Ads conversion linker can store the ad click when ad_storage consent is granted. Ecommerce events still go to GA4 only. Up to 10 IDs; anything else is refused when saved. Default: empty. |
 | Load Tags | **Immediately (Google Consent Mode)** (default), **After "Analytics" consent** or **After "Marketing" consent**. The two "after" options need CommerceGears Cookie Consent and are ignored when it is disabled. |
 | Consent Mode Defaults (Without CommerceGears Cookie Consent) | **Do not set (consent tool sets them)**, **Denied until updated** or **Granted (no consent required)**. Only used when CommerceGears Cookie Consent is not enabled. |
 | Debug Mode | Logs every event to the browser console and adds debug_mode so events show in GA4 DebugView. Switch off on live stores. |
@@ -92,10 +93,11 @@ and per store view.
 | Affiliation | Sent with purchases and items. Empty uses the store view name. |
 | Currency | **Currency the customer sees (order currency)** (default) or **Base currency**, for value, price and tax in all events. |
 | Item Prices Include Tax | Item prices in events include tax. Default: No. |
-| Purchase Value Includes Tax | Whether value includes tax. Tax is always sent separately in the tax parameter as well. |
-| Purchase Value Includes Shipping | Whether value includes shipping. Shipping is always sent separately in the shipping parameter as well. |
+| Purchase Value Includes Tax | The value is the order grand total after discounts. **No** leaves tax out (net revenue). Tax is always sent separately in the tax parameter as well. Default: Yes. |
+| Purchase Value Includes Shipping | Whether value includes shipping. Shipping is always sent separately in the shipping parameter as well. Default: Yes. |
+| Skip Zero-value Orders | **Yes**: no purchase event for orders whose purchase value is 0 (for example free products). The order is still marked as handled, so it is never sent later. Default: No. |
 | Maximum Items per view_item_list | Keeps the dataLayer small on long category pages. Default: 50; GA4 accepts up to 200. |
-| Enhanced Conversions (user_data) | Adds SHA-256 hashed email, phone and name (plus city, postcode and country) as user_data to purchase, sign_up and login. Only enable if your privacy policy covers it. |
+| Enhanced Conversions (user_data) | Adds SHA-256 hashed email, phone, name and street (plus city, region, postcode and country) as user_data to purchase, sign_up and login. With CommerceGears Cookie Consent it is only set after the visitor accepts Marketing (ad_user_data). Only enable if your privacy policy covers it. Default: No. |
 
 ### Refunds (Measurement Protocol)
 
@@ -134,7 +136,9 @@ and per store view.
   are both counted once, and a guest cart merged at login is not counted.
 - Every event has an id, and the browser remembers the ids it has already pushed. If a page navigates away before the
   section response arrives, the next page fetches the section once.
-- Purchase is flagged in the table `commercegears_ga4_order` and never output twice for the same order.
+- Purchase is flagged in the table `commercegears_ga4_order` before it is output, so a reload, the back button or a
+  second tab never repeat it. transaction_id is the order number, value, tax, shipping, currency and items come from
+  the order on the server (never from the URL).
 - Cart events use the cart's own currency. Lines with a custom price (for example free gifts) are reported at that
   price, even when it is 0.
 
@@ -154,8 +158,49 @@ To check the events, switch on **Debug Mode** and open the browser console: ever
 - **Without consent requirements**: choose **Granted (no consent required)**.
 
 The defaults cover ad_storage, ad_user_data, ad_personalization, analytics_storage, functionality_storage and
-personalization_storage. The GTM container includes a trigger "CE - commercegears_consent_update" and variables for the
+personalization_storage. With **Load Tags = Immediately** (advanced Consent Mode) gtag.js or GTM loads with the denied
+defaults: Google receives cookieless pings (`gcs=G100`) and sets no `_ga` or `_gcl` cookies until the visitor
+accepts. On later pages the stored choice is sent as a consent update before the tag loads. For enhanced conversions
+the CommerceGears Cookie Consent Marketing category must be shown (Cookie Categories > Show Marketing). The GTM container includes a trigger "CE - commercegears_consent_update" and variables for the
 CommerceGears Cookie Consent categories, for your own tags that should wait for consent.
+
+### Google Ads conversions from GA4
+
+To count Google Ads conversions from your GA4 purchases (Google Ads > Goals > Conversions > Import > Google Analytics
+4 properties > purchase):
+
+1. **Tag Type = gtag.js (GA4 directly)** and your **GA4 Measurement ID**.
+2. **Additional Google Tag IDs** = your Google Ads ID (for example AW-123456789, shown in Google Ads under the Google
+   tag). The module adds `gtag('config', 'AW-...')` after the GA4 config, so the conversion linker keeps the ad click
+   in the `_gcl_au`/`_gcl_aw` cookies, which Google needs to link the GA4 purchase to the ad. These cookies are only
+   set when ad_storage is granted; Consent Mode takes care of that.
+3. Leave out any Google Ads conversion event snippet: the purchase comes from GA4. The module sends its ecommerce
+   events to the GA4 measurement IDs only, so Google Ads never counts them a second time.
+4. Optional: **Purchase Value Includes Tax = No** (and Shipping = No) to bid on net revenue, **Skip Zero-value Orders =
+   Yes** to leave free orders out, and **Enhanced Conversions (user_data) = Yes**.
+
+With Google Tag Manager the setting is ignored: add a Conversion Linker tag (or a Google tag with your AW- ID) to your
+container instead. The GTM container export does not contain Google Ads tags.
+
+### Enhanced conversions
+
+With **Enhanced Conversions (user_data) = Yes** the purchase carries user_data built from the order:
+`sha256_email_address` (lower case, no spaces, dots before @gmail.com and @googlemail.com removed),
+`sha256_phone_number` (E.164, for example +447700900123; national numbers are converted with the address country for
+EU/EEA countries, the UK, Switzerland, Türkiye, the US, Canada, Australia and New Zealand), and in `address`
+`sha256_first_name`, `sha256_last_name`, `sha256_street` (lower case, symbols removed) plus `city`, `region`,
+`postal_code` and `country` in plain text. All hashes are SHA-256 in hex.
+
+With CommerceGears Cookie Consent, user_data is only set once the visitor has granted ad_user_data (the Marketing
+category):
+
+- gtag.js: `gtag('set', 'user_data', ...)` right before the purchase event.
+- Google Tag Manager: `user_data` in the purchase dataLayer entry (use it in a "User-Provided Data" variable).
+- Consent given later on the success page: user_data is set then (in GTM as a `commercegears_user_data` dataLayer
+  event); the purchase itself is not sent again.
+
+Without consent nothing is put in the dataLayer, the URL or a log. Without CommerceGears Cookie Consent the data is
+set as before; your consent tool and Google Consent Mode decide how it may be used.
 
 ## 7. Refunds
 
@@ -214,8 +259,12 @@ Under **System > Permissions > User Roles > Role Resources > CommerceGears > GA4
 - **Refunds are not arriving**: check **Send Refunds**, the API secret and the measurement ID, make sure Magento cron
   runs, then run `bin/magento commercegears:ga4:refunds` to see the queue and its last error. `--dry-run` shows the
   payload.
-- **Enhanced conversions without phone numbers**: Google requires E.164, so phone numbers are only sent when stored
-  in international format (+44...).
+- **Enhanced conversions without phone numbers**: Google requires E.164. Numbers in international format (+44...) and
+  national numbers of the supported countries (see Enhanced conversions) are converted; others are left out.
+- **No user_data at all**: with CommerceGears Cookie Consent it waits for Marketing consent. Check that the Marketing
+  category is shown and accepted.
+- **No _gcl_au cookie**: the visitor has not granted ad_storage (Marketing), or Tag Type is Google Tag Manager (add a
+  Conversion Linker tag in GTM).
 
 ## 12. Uninstall
 

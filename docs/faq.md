@@ -25,8 +25,8 @@ events, including purchase on the success page, do not depend on the checkout.
 Cart changes are detected on the server: each cart line is compared with its stored quantity, so an AJAX add and a
 full page reload are counted once, and a guest cart merged at login is not counted again. The events reach the
 browser through the private customer-data section `commercegears-ga4`, and every event has an id that the browser
-remembers. The purchase event is flagged per order in the database and never output twice, even when the shopper
-reloads the success page.
+remembers. The purchase event is flagged per order in the database before it is output and never output twice, even
+when the shopper reloads the success page, uses the back button or opens it in a second tab.
 
 **Does it support Google Consent Mode?**
 Yes, including the ad_user_data and ad_personalization signals. With CommerceGears Cookie Consent enabled, the consent
@@ -50,9 +50,21 @@ not send a purchase. Refunds for any order are sent from the server; when no GA 
 is used, so the refund is attributed to the transaction but not to a session.
 
 **What are enhanced conversions?**
-An option that adds SHA-256 hashed email, phone and name (plus city, postcode and country) as user_data to the
-purchase, sign_up and login events. It is off by default; only switch it on if your privacy policy covers it. Phone
-numbers are only sent when stored in international format (for example +44...).
+An option that adds SHA-256 hashed email, phone, name and street (plus city, region, postcode and country) as
+user_data to the purchase, sign_up and login events, normalised the way Google asks (lower case, no spaces, Gmail
+dots removed, phone numbers in E.164). It is off by default; only switch it on if your privacy policy covers it. With
+CommerceGears Cookie Consent the data is only set after the visitor accepts Marketing; if that happens on the success
+page, it is set then and the purchase is not sent again.
+
+**Can I count Google Ads conversions from GA4?**
+Yes. Use **Tag Type = gtag.js**, enter your Google Ads ID (for example AW-123456789) in **Additional Google Tag IDs**
+and import the GA4 purchase event as a conversion in Google Ads. The module adds the Google Ads tag configuration so
+the ad click is stored (only with ad_storage consent), but no Google Ads conversion event, and its ecommerce events go
+to GA4 only, so nothing is counted twice. With Google Tag Manager, add a Conversion Linker tag to your container.
+
+**Can free orders be left out?**
+Yes. **Skip Zero-value Orders = Yes** sends no purchase for orders whose purchase value is 0, for example a free
+product. The order is still marked as handled, so it is never sent later.
 
 **Can I use server-side tagging?**
 Yes. Set **GTM Script Domain** to your tagging server (for example https://sgtm.example.com) and GTM is loaded from

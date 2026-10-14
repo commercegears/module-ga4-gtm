@@ -7,6 +7,7 @@
                 <mode>gtm</mode>
                 <gtm_url>https://www.googletagmanager.com</gtm_url>
                 <load_after_consent></load_after_consent>
+                <additional_tag_ids/>
                 <consent_default>none</consent_default>
                 <debug>0</debug>
             </general>
@@ -19,6 +20,7 @@
                 <value_incl_tax>1</value_incl_tax>
                 <value_incl_shipping>1</value_incl_shipping>
                 <max_list_items>50</max_list_items>
+                <skip_zero_value>0</skip_zero_value>
                 <user_data>0</user_data>
             </data>
             <measurement_protocol>

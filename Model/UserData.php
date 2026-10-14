@@ -10,12 +10,16 @@ use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 
 /**
- * Hashed customer data for Google enhanced conversions (gtag user_data format).
+ * Customer data for Google enhanced conversions (gtag user_data format): email, phone, names and street as
+ * SHA-256 hex of the normalised values; city, region, postal code and country in plain text, as Google requires.
+ * The browser only sets it after the visitor has granted ad_user_data (see ga4.js).
  */
 class UserData
 {
-    public function __construct(private readonly Config $config)
-    {
+    public function __construct(
+        private readonly Config $config,
+        private readonly UserDataNormaliser $normaliser
+    ) {
     }
 
     /**
@@ -26,22 +30,19 @@ class UserData
         if (!$this->config->isUserDataEnabled((int)$order->getStoreId())) {
             return [];
         }
+        $n = $this->normaliser;
         $address = $order->getBillingAddress();
-        $data = ['sha256_email_address' => $this->hash((string)$order->getCustomerEmail())];
+        $data = ['sha256_email_address' => $n->hash($n->email((string)$order->getCustomerEmail()))];
         if ($address) {
-            $phone = $this->normalisePhone((string)$address->getTelephone());
-            if ($phone !== '') {
-                $data['sha256_phone_number'] = hash('sha256', $phone);
-            }
-            $street = $address->getStreet();
+            $data['sha256_phone_number'] = $n->hash($n->phone((string)$address->getTelephone(), (string)$address->getCountryId()));
             $data['address'] = array_filter([
-                'sha256_first_name' => $this->hash((string)$address->getFirstname()),
-                'sha256_last_name' => $this->hash((string)$address->getLastname()),
-                'sha256_street' => $this->hash(is_array($street) ? (string)($street[0] ?? '') : (string)$street),
-                'city' => trim((string)$address->getCity()),
-                'region' => trim((string)$address->getRegion()),
-                'postal_code' => trim((string)$address->getPostcode()),
-                'country' => (string)$address->getCountryId(),
+                'sha256_first_name' => $n->hash($n->name((string)$address->getFirstname())),
+                'sha256_last_name' => $n->hash($n->name((string)$address->getLastname())),
+                'sha256_street' => $n->hash($n->street($address->getStreet())),
+                'city' => $n->name((string)$address->getCity()),
+                'region' => $n->name((string)$address->getRegion()),
+                'postal_code' => $n->postalCode((string)$address->getPostcode()),
+                'country' => $n->country((string)$address->getCountryId()),
             ]);
         }
         return array_filter($data);
@@ -55,30 +56,13 @@ class UserData
         if (!$this->config->isUserDataEnabled((int)$customer->getStoreId())) {
             return [];
         }
+        $n = $this->normaliser;
         return array_filter([
-            'sha256_email_address' => $this->hash((string)$customer->getEmail()),
+            'sha256_email_address' => $n->hash($n->email((string)$customer->getEmail())),
             'address' => array_filter([
-                'sha256_first_name' => $this->hash((string)$customer->getFirstname()),
-                'sha256_last_name' => $this->hash((string)$customer->getLastname()),
+                'sha256_first_name' => $n->hash($n->name((string)$customer->getFirstname())),
+                'sha256_last_name' => $n->hash($n->name((string)$customer->getLastname())),
             ]),
         ]);
-    }
-
-    private function hash(string $value): string
-    {
-        $value = mb_strtolower(trim($value));
-        return $value === '' ? '' : hash('sha256', $value);
-    }
-
-    /**
-     * Only numbers already in international format (+44..., 0044...) can be normalised to E.164 safely.
-     */
-    private function normalisePhone(string $phone): string
-    {
-        $phone = preg_replace('/[^\d+]/', '', $phone) ?? '';
-        if (str_starts_with($phone, '00')) {
-            $phone = '+' . substr($phone, 2);
-        }
-        return preg_match('/^\+[1-9]\d{6,14}$/', $phone) ? $phone : '';
     }
 }
