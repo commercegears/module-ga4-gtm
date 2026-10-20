@@ -24,6 +24,8 @@ class GtmContainerExport
 
     /** GTM built-in trigger "Initialization - All Pages". */
     private const TRIGGER_INITIALIZATION = '2147479573';
+    /** GTM built-in trigger "All Pages". */
+    private const TRIGGER_ALL_PAGES = '2147479553';
 
     private int $nextId = 1;
 
@@ -50,6 +52,11 @@ class GtmContainerExport
             'user_data' => $this->dataLayerVariable('DLV - user_data', 'user_data'),
             'consent_analytics' => $this->dataLayerVariable('DLV - sw_consent.analytics', 'sw_consent.analytics'),
             'consent_marketing' => $this->dataLayerVariable('DLV - sw_consent.marketing', 'sw_consent.marketing'),
+            'form_id' => $this->dataLayerVariable('DLV - form_id', 'form_id'),
+            'form_name' => $this->dataLayerVariable('DLV - form_name', 'form_name'),
+            'lead_source' => $this->dataLayerVariable('DLV - lead_source', 'lead_source'),
+            'value' => $this->dataLayerVariable('DLV - value', 'value'),
+            'currency' => $this->dataLayerVariable('DLV - currency', 'currency'),
         ];
         $ga4Id = '{{Const - GA4 Measurement ID}}';
 
@@ -58,6 +65,7 @@ class GtmContainerExport
             'account' => $this->customEventTrigger('CE - GA4 login and sign_up', self::ACCOUNT_EVENTS),
             'search' => $this->customEventTrigger('CE - GA4 search', ['search']),
             'consent' => $this->customEventTrigger('CE - commercegears_consent_update', ['commercegears_consent_update']),
+            'lead' => $this->customEventTrigger('CE - GA4 generate_lead', ['generate_lead']),
         ];
 
         $tags = [
@@ -85,7 +93,66 @@ class GtmContainerExport
                 $this->param('TEMPLATE', 'measurementIdOverride', $ga4Id),
                 $this->eventParameters(['search_term' => '{{DLV - search_term}}']),
             ], [$triggers['search']['triggerId']]),
+            $this->tag('GA4 - generate_lead', 'gaawe', [
+                $this->param('BOOLEAN', 'sendEcommerceData', 'false'),
+                $this->param('BOOLEAN', 'enhancedUserId', 'false'),
+                $this->param('TEMPLATE', 'eventName', 'generate_lead'),
+                $this->param('TEMPLATE', 'measurementIdOverride', $ga4Id),
+                $this->eventParameters([
+                    'form_id' => '{{DLV - form_id}}',
+                    'form_name' => '{{DLV - form_name}}',
+                    'lead_source' => '{{DLV - lead_source}}',
+                    'value' => '{{DLV - value}}',
+                    'currency' => '{{DLV - currency}}',
+                ]),
+            ], [$triggers['lead']['triggerId']]),
         ];
+
+        // Click events configured in Click Events > Events.
+        $clickEvents = array_values(array_unique(array_column($this->config->getClickRules($storeId), 'event')));
+        if ($clickEvents) {
+            $variables['link_url'] = $this->dataLayerVariable('DLV - link_url', 'link_url');
+            $variables['link_domain'] = $this->dataLayerVariable('DLV - link_domain', 'link_domain');
+            $triggers['clicks'] = $this->customEventTrigger('CE - GA4 click events', $clickEvents);
+            $tags[] = $this->tag('GA4 - click events', 'gaawe', [
+                $this->param('BOOLEAN', 'sendEcommerceData', 'false'),
+                $this->param('BOOLEAN', 'enhancedUserId', 'false'),
+                $this->param('TEMPLATE', 'eventName', '{{Event}}'),
+                $this->param('TEMPLATE', 'measurementIdOverride', $ga4Id),
+                $this->eventParameters(['link_url' => '{{DLV - link_url}}', 'link_domain' => '{{DLV - link_domain}}']),
+            ], [$triggers['clicks']['triggerId']]);
+        }
+
+        // Google Ads conversions (Google Ads Conversions settings): conversion linker plus one conversion tag per label,
+        // reading the ads_conversion object that ga4.js adds to the purchase / generate_lead entry.
+        $adsTags = [];
+        foreach (['purchase' => 'purchase', 'lead' => 'generate_lead'] as $type => $event) {
+            $sendTo = $this->config->getAdsSendTo($type, $storeId);
+            if ($sendTo !== '') {
+                $adsTags[$type] = [$event, ...explode('/', substr($sendTo, 3), 2)];
+            }
+        }
+        if ($adsTags) {
+            $variables['ads_value'] = $this->dataLayerVariable('DLV - ads_conversion.value', 'ads_conversion.value');
+            $variables['ads_currency'] = $this->dataLayerVariable('DLV - ads_conversion.currency', 'ads_conversion.currency');
+            $variables['ads_transaction_id'] = $this->dataLayerVariable('DLV - ads_conversion.transaction_id', 'ads_conversion.transaction_id');
+            $tags[] = $this->tag('Google Ads - Conversion Linker', 'gclidw', [
+                $this->param('BOOLEAN', 'enableCrossDomain', 'false'),
+            ], [self::TRIGGER_ALL_PAGES]);
+            foreach ($adsTags as $type => [$event, $conversionId, $label]) {
+                $key = $event === 'generate_lead' ? 'lead' : 'ads_' . $event;
+                if (!isset($triggers[$key])) {
+                    $triggers[$key] = $this->customEventTrigger('CE - ' . $event, [$event]);
+                }
+                $tags[] = $this->tag('Google Ads - ' . $type . ' conversion', 'awct', [
+                    $this->param('TEMPLATE', 'conversionId', $conversionId),
+                    $this->param('TEMPLATE', 'conversionLabel', $label),
+                    $this->param('TEMPLATE', 'conversionValue', '{{DLV - ads_conversion.value}}'),
+                    $this->param('TEMPLATE', 'currencyCode', '{{DLV - ads_conversion.currency}}'),
+                    $this->param('TEMPLATE', 'orderId', '{{DLV - ads_conversion.transaction_id}}'),
+                ], [$triggers[$key]['triggerId']]);
+            }
+        }
 
         return [
             'exportFormatVersion' => 2,

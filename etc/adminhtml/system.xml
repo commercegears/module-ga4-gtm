@@ -41,7 +41,7 @@
                 </field>
                 <field id="additional_tag_ids" translate="label comment" type="text" sortOrder="55" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Additional Google Tag IDs</label>
-                    <comment>Comma-separated, for example AW-123456789 for Google Ads. Each ID is configured after the GA4 measurement ID, so the Google Ads conversion linker can store the ad click (only when ad_storage consent is granted). Ecommerce events still go to GA4 only; no Google Ads conversion events are added. Allowed: G-, AW-, DC- and GT- IDs. Default: empty.</comment>
+                    <comment>Comma-separated, for example AW-123456789 for Google Ads. Each ID is configured after the GA4 measurement ID, so the Google Ads conversion linker can store the ad click (only when ad_storage consent is granted). Ecommerce events still go to GA4 only; Google Ads only receives the conversions set under Google Ads Conversions. Allowed: G-, AW-, DC- and GT- IDs. Default: empty.</comment>
                     <backend_model>CommerceGears\Ga4\Model\Config\Backend\TagIds</backend_model>
                     <depends>
                         <field id="mode">gtag</field>
@@ -122,8 +122,50 @@
                 </field>
                 <field id="user_data" translate="label comment" type="select" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Enhanced Conversions (user_data)</label>
-                    <comment>Adds SHA-256 hashed email, phone, name and street (plus city, region, postcode and country) as user_data to purchase, sign_up and login. With CommerceGears Cookie Consent it is only set after the visitor accepts the category for ad_user_data (Marketing). Only enable if your privacy policy covers it. Default: No.</comment>
+                    <comment>Adds SHA-256 hashed email, phone, name and street (plus city, region, postcode and country) as user_data to purchase, sign_up, login and generate_lead (and the Google Ads conversions). With CommerceGears Cookie Consent it is only set after the visitor accepts the category for ad_user_data (Marketing). Only enable if your privacy policy covers it. Default: No.</comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+            <group id="ads" translate="label comment" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Google Ads Conversions</label>
+                <comment><![CDATA[Optional: sends Google Ads conversion events directly, as an alternative to importing GA4 key events into Google Ads (use one of the two for the same action, not both, or it is counted twice). gtag.js: <code>gtag('event', 'conversion', {send_to: 'AW-…/label', …})</code> right after the GA4 event. Google Tag Manager: the purchase and generate_lead dataLayer entries get an <code>ads_conversion</code> object for your Google Ads conversion tag (included in the GTM Container Export).]]></comment>
+                <field id="conversion_id" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Google Ads Conversion ID</label>
+                    <comment>For example AW-123456789 (Google Ads &gt; Goals &gt; Conversions &gt; your conversion &gt; Tag setup). Empty: the first AW- ID in Additional Google Tag IDs is used. Default: empty.</comment>
+                    <backend_model>CommerceGears\Ga4\Model\Config\Backend\AdsConversionId</backend_model>
+                </field>
+                <field id="purchase_label" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Purchase Conversion Label</label>
+                    <comment>The part after "/" in send_to of your purchase conversion, for example AbC-D_efG-h12_34-567. Sent once per order on the success page with the purchase value, currency and order number (transaction_id), after enhanced conversions data. Empty: no purchase conversion. Default: empty.</comment>
+                    <backend_model>CommerceGears\Ga4\Model\Config\Backend\ConversionLabel</backend_model>
+                </field>
+                <field id="lead_label" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Lead Conversion Label</label>
+                    <comment>Optional label of a lead conversion, sent with every generate_lead (see Leads). Empty: no lead conversion. Default: empty.</comment>
+                    <backend_model>CommerceGears\Ga4\Model\Config\Backend\ConversionLabel</backend_model>
+                </field>
+            </group>
+            <group id="leads" translate="label comment" sortOrder="26" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Leads (generate_lead)</label>
+                <comment>generate_lead is sent on the next page after the form was submitted successfully (checked on the server, never on the button click), with form_id and form_name only: nothing the visitor typed is sent, except as hashed user_data when Enhanced Conversions is on.</comment>
+                <field id="forms" translate="label comment" type="multiselect" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <can_be_empty>1</can_be_empty>
+                    <label>Forms</label>
+                    <comment>"Other forms" are reported by other modules (see the user guide). Select none to send no generate_lead. Default: Contact Us form.</comment>
+                    <source_model>CommerceGears\Ga4\Model\Config\Source\LeadForms</source_model>
+                </field>
+                <field id="value" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Lead Value</label>
+                    <comment>Optional value of a lead, sent as value with the currency from Ecommerce Data &gt; Currency (also with the lead conversion). Empty: no value. Default: empty.</comment>
+                    <validate>validate-zero-or-greater validate-number</validate>
+                </field>
+            </group>
+            <group id="clicks" translate="label comment" sortOrder="27" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Click Events</label>
+                <field id="rules" translate="label comment" type="textarea" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Events</label>
+                    <comment><![CDATA[One per line: event name, a colon and a CSS selector, for example <code>demo_open: a[href*="demo.example.com"]</code>. A click on a matching element (or inside it) sends that event with link_url (without #fragment; only short query values such as ?tour=intro are kept) and link_domain. Event names: a-z, 0-9 and _; names this module or GA4 already use are refused. Up to 20 lines. Default: empty.]]></comment>
+                    <backend_model>CommerceGears\Ga4\Model\Config\Backend\ClickRules</backend_model>
                 </field>
             </group>
             <group id="measurement_protocol" translate="label comment" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">

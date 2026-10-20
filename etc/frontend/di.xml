@@ -32,6 +32,14 @@
         <plugin name="commercegears_ga4_register_crosssell" type="CommerceGears\Ga4\Plugin\RegisterCrosssellPlugin"/>
     </type>
 
+    <!-- generate_lead after a successful submit (types that do not exist when Magento_Contact/Newsletter is removed are ignored) -->
+    <type name="Magento\Contact\Model\MailInterface">
+        <plugin name="commercegears_ga4_contact_lead" type="CommerceGears\Ga4\Plugin\ContactLeadPlugin"/>
+    </type>
+    <type name="Magento\Newsletter\Model\SubscriptionManagerInterface">
+        <plugin name="commercegears_ga4_newsletter_lead" type="CommerceGears\Ga4\Plugin\NewsletterLeadPlugin"/>
+    </type>
+
     <virtualType name="CommerceGears\Ga4\Model\Event\Provider\HyvaCrosssell" type="CommerceGears\Ga4\Model\Event\Provider\HyvaLinkedProducts">
         <arguments>
             <argument name="context" xsi:type="string">cart</argument>

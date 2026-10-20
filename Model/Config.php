@@ -21,6 +21,21 @@ class Config
     public const MODE_GTM = 'gtm';
     public const MODE_GTAG = 'gtag';
     public const DEFAULT_GTM_URL = 'https://www.googletagmanager.com';
+    public const MAX_CLICK_RULES = 20;
+
+    private const ADS_ID_PATTERN = '/^AW-\d{6,15}$/';
+
+    /** Events of this module and GA4's reserved/automatic events: not allowed as click event names. */
+    public const RESERVED_EVENTS = [
+        'view_item_list', 'select_item', 'view_item', 'add_to_cart', 'remove_from_cart', 'view_cart', 'begin_checkout',
+        'add_shipping_info', 'add_payment_info', 'purchase', 'refund', 'add_to_wishlist', 'login', 'sign_up', 'search',
+        'generate_lead', 'conversion', 'page_view', 'first_visit', 'session_start', 'user_engagement', 'first_open',
+        'screen_view', 'app_remove', 'error', 'in_app_purchase', 'ad_click', 'ad_exposure', 'ad_impression', 'ad_query',
+        'ad_reward', 'ad_activeview', 'adunit_exposure', 'notification_dismiss', 'notification_foreground',
+        'notification_open', 'notification_receive', 'os_update', 'app_clear_data', 'app_exception', 'app_install',
+        'app_update', 'app_upgrade', 'app_store_refund', 'dynamic_link_app_open', 'dynamic_link_app_update',
+        'dynamic_link_first_open', 'firebase_campaign', 'user_data',
+    ];
 
     public function __construct(
         private readonly ScopeConfigInterface $scopeConfig,
@@ -110,6 +125,142 @@ class Config
     public static function isValidTagId(string $id): bool
     {
         return (bool)preg_match('/^(?:G-[A-Z0-9]{4,15}|AW-\d{6,15}|DC-\d{5,15}|GT-[A-Z0-9]{4,15})$/', $id);
+    }
+
+    /**
+     * Every Google tag ID gtag.js configures after the GA4 measurement ID: the Additional Google Tag IDs plus the
+     * Google Ads conversion ID (when it is not in that list already), so the conversion has a configured destination.
+     *
+     * @return string[]
+     */
+    public function getGtagConfigIds(int|string|null $store = null): array
+    {
+        $ids = $this->getAdditionalTagIds($store);
+        $adsId = $this->getAdsConversionId($store);
+        if ($adsId !== '' && !in_array($adsId, $ids, true)) {
+            $ids[] = $adsId;
+        }
+        return $ids;
+    }
+
+    /**
+     * Google Ads conversion ID (AW-…): the setting, or else the first AW- ID of the Additional Google Tag IDs.
+     */
+    public function getAdsConversionId(int|string|null $store = null): string
+    {
+        $id = strtoupper($this->getValue('ads/conversion_id', $store));
+        if ($id !== '') {
+            return preg_match(self::ADS_ID_PATTERN, $id) ? $id : '';
+        }
+        foreach ($this->getAdditionalTagIds($store) as $tagId) {
+            if (str_starts_with($tagId, 'AW-')) {
+                return $tagId;
+            }
+        }
+        return '';
+    }
+
+    /**
+     * send_to of a Google Ads conversion ("AW-123/label") for 'purchase' or 'lead'; empty = no conversion event.
+     */
+    public function getAdsSendTo(string $type, int|string|null $store = null): string
+    {
+        if (!in_array($type, ['purchase', 'lead'], true)) {
+            return '';
+        }
+        $label = $this->getValue('ads/' . $type . '_label', $store);
+        $id = $this->getAdsConversionId($store);
+        return $id !== '' && self::isValidConversionLabel($label) ? $id . '/' . $label : '';
+    }
+
+    /**
+     * Google Ads conversion labels: letters, digits, "-" and "_" (for example AbC-D_efG-h12_34-567).
+     */
+    public static function isValidConversionLabel(string $label): bool
+    {
+        return (bool)preg_match('/^[A-Za-z0-9_-]{6,40}$/', $label);
+    }
+
+    /**
+     * Forms whose successful submission sends generate_lead ('contact', 'newsletter', 'custom').
+     *
+     * @return string[]
+     */
+    public function getLeadForms(int|string|null $store = null): array
+    {
+        return preg_split('/\s*,\s*/', $this->getValue('leads/forms', $store), -1, PREG_SPLIT_NO_EMPTY) ?: [];
+    }
+
+    public function isLeadFormEnabled(string $form, int|string|null $store = null): bool
+    {
+        return in_array($form, $this->getLeadForms($store), true);
+    }
+
+    /**
+     * Value sent with generate_lead (and the lead conversion); null = no value and currency.
+     */
+    public function getLeadValue(int|string|null $store = null): ?float
+    {
+        $value = $this->getValue('leads/value', $store);
+        return $value !== '' && is_numeric($value) && (float)$value >= 0 ? round((float)$value, 2) : null;
+    }
+
+    /**
+     * Click events: [['event' => 'demo_open', 'selector' => 'a[href*="demo.example.com"]'], ...]. Invalid lines are skipped.
+     *
+     * @return array<int, array{event: string, selector: string}>
+     */
+    public function getClickRules(int|string|null $store = null): array
+    {
+        $rules = [];
+        foreach (self::parseClickRules($this->getValue('clicks/rules', $store)) as $rule) {
+            if (self::clickRuleError($rule['event'], $rule['selector']) === null) {
+                $rules[] = ['event' => $rule['event'], 'selector' => $rule['selector']];
+            }
+        }
+        return array_slice($rules, 0, self::MAX_CLICK_RULES);
+    }
+
+    /**
+     * One rule per line: "event_name: CSS selector" (the first ":" separates them). Empty lines and lines starting
+     * with "#" are ignored.
+     *
+     * @return array<int, array{event: string, selector: string, line: string}>
+     */
+    public static function parseClickRules(string $value): array
+    {
+        $rules = [];
+        foreach (preg_split('/\R/', $value) ?: [] as $line) {
+            $line = trim($line);
+            if ($line === '' || str_starts_with($line, '#')) {
+                continue;
+            }
+            $pos = strpos($line, ':');
+            $rules[] = [
+                'event' => $pos === false ? $line : trim(substr($line, 0, $pos)),
+                'selector' => $pos === false ? '' : trim(substr($line, $pos + 1)),
+                'line' => $line,
+            ];
+        }
+        return $rules;
+    }
+
+    /**
+     * Why a click rule cannot be used (null = valid). Event names follow GA4's rules and must not be an event this
+     * module (or GA4 itself) sends, so a click can never be counted as a purchase or a lead.
+     */
+    public static function clickRuleError(string $event, string $selector): ?string
+    {
+        if (!preg_match('/^[a-z][a-z0-9_]{0,39}$/', $event)) {
+            return 'event';
+        }
+        if (in_array($event, self::RESERVED_EVENTS, true) || preg_match('/^(?:ga_|google_|gtag_|firebase_)/', $event)) {
+            return 'reserved';
+        }
+        if ($selector === '' || strlen($selector) > 300 || preg_match('/[{};\x00-\x1f]|<\//', $selector)) {
+            return 'selector';
+        }
+        return null;
     }
 
     public function isDebug(int|string|null $store = null): bool

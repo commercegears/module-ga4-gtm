@@ -65,4 +65,21 @@ class UserData
             ]),
         ]);
     }
+
+    /**
+     * From a form (contact, newsletter): hashed email and, when it is written in international format, phone.
+     *
+     * @return array<string, mixed>
+     */
+    public function fromContact(string $email, string $phone = '', int|string|null $storeId = null): array
+    {
+        if ((trim($email) === '' && trim($phone) === '') || !$this->config->isUserDataEnabled($storeId)) {
+            return [];
+        }
+        $n = $this->normaliser;
+        return array_filter([
+            'sha256_email_address' => str_contains($email, '@') ? $n->hash($n->email($email)) : '',
+            'sha256_phone_number' => $n->hash($n->phone($phone)),
+        ]);
+    }
 }

@@ -58,18 +58,21 @@ class DataLayer extends Template
             'sendTo' => $this->getSendTo(),
             'events' => $this->collectEvents(),
             'lists' => $this->collectLists(),
+            // Click events (public settings only): [{event, selector}]
+            'clicks' => $this->config->getClickRules(),
         ]);
     }
 
     /**
-     * gtag.js with additional Google tag IDs: events go to the GA4 measurement IDs only (main and additional G- IDs),
-     * never to Google Ads, so no Ads conversion can be counted from them. Empty = gtag default (unchanged behaviour).
+     * gtag.js with additional Google tag IDs (or a Google Ads conversion ID): events go to the GA4 measurement IDs only
+     * (main and additional G- IDs), never to Google Ads; Ads only receives the explicit conversion events.
+     * Empty = gtag default (unchanged behaviour).
      *
      * @return string[]
      */
     private function getSendTo(): array
     {
-        $additional = $this->config->getMode() === Config::MODE_GTAG ? $this->config->getAdditionalTagIds() : [];
+        $additional = $this->config->getMode() === Config::MODE_GTAG ? $this->config->getGtagConfigIds() : [];
         if (!$additional) {
             return [];
         }

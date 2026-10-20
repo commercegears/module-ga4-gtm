@@ -16,7 +16,7 @@ use CommerceGears\Ga4\Model\ResourceModel\OrderTracking;
 use CommerceGears\Ga4\Model\UserData;
 
 /**
- * purchase on the order success page, output once per order: the order is flagged in commercegears_ga4_order before
+ * purchase on the order success page (plus the Google Ads purchase conversion when configured), output once per order: the order is flagged in commercegears_ga4_order before
  * the event is rendered, so a reload, the back button or a second tab never repeat it. All values come from the
  * order of the checkout session, never from the URL.
  */
@@ -43,7 +43,28 @@ class Purchase implements PageEventProviderInterface
         if ($this->config->isSkipZeroValue((int)$order->getStoreId()) && PurchaseValue::isZero((float)$event['params']['value'])) {
             return [];
         }
-        return [$event];
+        return [$this->withAdsConversion($event, (int)$order->getStoreId())];
+    }
+
+    /**
+     * Google Ads purchase conversion with exactly the purchase's value, currency and transaction_id. It travels inside
+     * the purchase event (same once-per-order flag and browser id), so the two can never disagree.
+     *
+     * @param array<string, mixed> $event
+     * @return array<string, mixed>
+     */
+    public function withAdsConversion(array $event, int $storeId): array
+    {
+        $sendTo = $this->config->getAdsSendTo('purchase', $storeId);
+        if ($sendTo !== '') {
+            $event['conversion'] = [
+                'send_to' => $sendTo,
+                'value' => $event['params']['value'],
+                'currency' => $event['params']['currency'],
+                'transaction_id' => $event['params']['transaction_id'],
+            ];
+        }
+        return $event;
     }
 
     /**

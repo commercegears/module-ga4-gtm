@@ -36,7 +36,7 @@ class PurchaseTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->settings = ['incl_tax' => false, 'incl_shipping' => false, 'skip_zero' => false, 'user_data' => false];
+        $this->settings = ['incl_tax' => false, 'incl_shipping' => false, 'skip_zero' => false, 'user_data' => false, 'send_to' => ''];
         $this->config = $this->createStub(Config::class);
         $this->config->method('useBaseCurrency')->willReturn(false);
         $this->config->method('isValueInclTax')->willReturnCallback(fn () => $this->settings['incl_tax']);
@@ -44,6 +44,7 @@ class PurchaseTest extends TestCase
         $this->config->method('isSkipZeroValue')->willReturnCallback(fn () => $this->settings['skip_zero']);
         $this->config->method('isUserDataEnabled')->willReturnCallback(fn () => $this->settings['user_data']);
         $this->config->method('getAffiliation')->willReturn('Test Store');
+        $this->config->method('getAdsSendTo')->willReturnCallback(fn (string $type) => $type === 'purchase' ? $this->settings['send_to'] : '');
         $this->tracking = $this->createMock(OrderTracking::class);
         $this->session = $this->createStub(CheckoutSession::class);
         $this->itemBuilder = $this->createStub(ItemBuilder::class);
@@ -171,5 +172,37 @@ class PurchaseTest extends TestCase
         self::assertSame('SW1A 1AA', $userData['address']['postal_code']);
         self::assertSame('GB', $userData['address']['country']);
         self::assertArrayNotHasKey('region', $userData['address']);
+    }
+
+    public function testNoAdsConversionWithoutLabel(): void
+    {
+        $this->order(102.0, 17.0, 10.0, 2.0);
+        $this->tracking->method('markPurchaseTracked')->willReturn(true);
+        self::assertArrayNotHasKey('conversion', $this->provider()->getEvents()[0]);
+    }
+
+    public function testAdsConversionUsesThePurchaseValues(): void
+    {
+        $this->settings['send_to'] = 'AW-18506289930/AbCdEfGh12';
+        $this->order(102.0, 17.0, 10.0, 2.0);
+        $this->tracking->expects(self::once())->method('markPurchaseTracked')->with(501)->willReturn(true);
+        $event = $this->provider()->getEvents()[0];
+        self::assertSame([
+            'send_to' => 'AW-18506289930/AbCdEfGh12',
+            'value' => 75.0,
+            'currency' => 'EUR',
+            'transaction_id' => '000000501',
+        ], $event['conversion']);
+        self::assertSame($event['params']['value'], $event['conversion']['value']);
+        self::assertSame('purchase_000000501', $event['uid'], 'one id for purchase and conversion');
+    }
+
+    public function testNoAdsConversionForAnAlreadyTrackedOrSkippedOrder(): void
+    {
+        $this->settings['send_to'] = 'AW-18506289930/AbCdEfGh12';
+        $this->settings['skip_zero'] = true;
+        $this->order(0.0, 0.0, 0.0, 0.0);
+        $this->tracking->method('markPurchaseTracked')->willReturn(true);
+        self::assertSame([], $this->provider()->getEvents());
     }
 }

@@ -23,6 +23,18 @@
                 <skip_zero_value>0</skip_zero_value>
                 <user_data>0</user_data>
             </data>
+            <ads>
+                <conversion_id/>
+                <purchase_label/>
+                <lead_label/>
+            </ads>
+            <leads>
+                <forms>contact</forms>
+                <value/>
+            </leads>
+            <clicks>
+                <rules/>
+            </clicks>
             <measurement_protocol>
                 <refund_enabled>0</refund_enabled>
                 <api_secret backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>

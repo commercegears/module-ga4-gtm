@@ -14,4 +14,7 @@
     <action name="customer/account/loginPost"><section name="commercegears-ga4"/></action>
     <action name="customer/account/createPost"><section name="commercegears-ga4"/></action>
     <action name="customer/ajax/login"><section name="commercegears-ga4"/></action>
+    <action name="contact/index/post"><section name="commercegears-ga4"/></action>
+    <action name="newsletter/subscriber/new"><section name="commercegears-ga4"/></action>
+    <action name="newsletter/manage/save"><section name="commercegears-ga4"/></action>
 </config>

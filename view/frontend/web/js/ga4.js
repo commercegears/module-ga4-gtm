@@ -6,7 +6,10 @@
  *      so it works with full-page cache and AJAX carts
  *   3. clicks on product links inside tracked lists (select_item)
  *   4. Luma checkout mixins (add_shipping_info, add_payment_info) via window.swGa4.push()
+ *   5. clicks on elements matching the configured click events (custom event name, link_url without personal data)
  * Every queued event has an id; delivered ids are remembered in localStorage so nothing is counted twice.
+ * Google Ads conversions (purchase, generate_lead) travel inside their event and are sent right after it, under the
+ * same id: gtag('event', 'conversion', {send_to, ...}) in gtag mode, an ads_conversion key on the dataLayer entry in GTM.
  * Enhanced conversions: with CommerceGears Cookie Consent active, user_data is only set (gtag 'set' / dataLayer) once the
  * visitor has granted ad_user_data; when consent comes later on the same page it is set then, without repeating events.
  */
@@ -100,8 +103,9 @@
      * @param {Object} params event parameters (items, value, currency ...)
      * @param {Object} [extra] top-level keys such as user_data
      * @param {string} [uid]  unique id: the event is pushed only once per browser
+     * @param {Object} [conversion] Google Ads conversion sent right after the event (send_to, value, currency, transaction_id)
      */
-    function push(name, params, extra, uid) {
+    function push(name, params, extra, uid, conversion) {
         if (!name) {
             return false;
         }
@@ -143,6 +147,10 @@
                 params = copy;
             }
             w.gtag('event', name, params);
+            if (conversion && conversion.send_to) {
+                // After user_data (set before the event above) and after the GA4 event.
+                w.gtag('event', 'conversion', conversion);
+            }
         } else {
             var entry = { event: name };
             if (ECOMMERCE.indexOf(name) !== -1) {
@@ -156,9 +164,19 @@
             for (key in extra) {
                 if (Object.prototype.hasOwnProperty.call(extra, key)) { entry[key] = extra[key]; }
             }
+            if (conversion && conversion.send_to) {
+                entry.ads_conversion = conversion;
+            }
             w.dataLayer.push(entry);
+            if (entry.ads_conversion) {
+                // Only the event that carries it may read ads_conversion (GTM keeps keys for later events).
+                w.dataLayer.push({ ads_conversion: null });
+            }
         }
         log(name, original, extra);
+        if (conversion && conversion.send_to) {
+            log('conversion', conversion);
+        }
         if (name === 'begin_checkout') {
             api.checkout = original;
         }
@@ -176,7 +194,7 @@
     /* ------------------------------------------------------------- page events and lists */
 
     (data.events || []).forEach(function (e) {
-        push(e.event, e.params, e.extra, e.uid);
+        push(e.event, e.params, e.extra, e.uid, e.conversion);
     });
 
     var linkMap = {};
@@ -214,6 +232,61 @@
         }
     }, true);
 
+    /* ------------------------------------------------------------- click events (configured selectors) */
+
+    var clickRules = Array.isArray(data.clicks) ? data.clicks : [];
+    // Query parameters kept in link_url: short codes only (tour=ga4-gtm, utm_source=...), never values that could
+    // identify a person.
+    var SENSITIVE_PARAM = /mail|name|phone|tel|token|key|pass|secret|auth|sess|sid|code|hash|user|customer|address|zip|post/i;
+
+    function linkParams(el) {
+        var a = el.closest('a[href]') || (el.querySelector ? el.querySelector('a[href]') : null);
+        if (!a) {
+            return {};
+        }
+        var u;
+        try {
+            u = new URL(a.getAttribute('href'), location.href);
+        } catch (e) {
+            return {};
+        }
+        if (!/^https?:$/.test(u.protocol)) {
+            return {}; // mailto:, tel:, javascript: ...
+        }
+        var keep = [];
+        u.searchParams.forEach(function (value, name) {
+            if (/^[A-Za-z0-9_.-]{1,64}$/.test(value) && /^[A-Za-z0-9_.-]{1,40}$/.test(name) && !SENSITIVE_PARAM.test(name)) {
+                keep.push(name + '=' + value);
+            }
+        });
+        return { link_url: u.origin + u.pathname + (keep.length ? '?' + keep.join('&') : ''), link_domain: u.hostname };
+    }
+
+    if (clickRules.length) {
+        d.addEventListener('click', function (e) {
+            var target = e.target && e.target.closest ? e.target : null;
+            if (!target) {
+                return;
+            }
+            var fired = {};
+            clickRules.forEach(function (rule) {
+                if (!rule || !rule.event || fired[rule.event]) {
+                    return;
+                }
+                var el = null;
+                try {
+                    el = target.closest(rule.selector);
+                } catch (err) {
+                    return; // invalid selector: ignored
+                }
+                if (el) {
+                    fired[rule.event] = true;
+                    push(rule.event, linkParams(el));
+                }
+            });
+        }, true);
+    }
+
     /* ------------------------------------------------------------- private events (customer data) */
 
     function handleSection(section) {
@@ -221,7 +294,7 @@
             return;
         }
         section.events.forEach(function (e) {
-            push(e.event, e.params, e.extra, e.uid);
+            push(e.event, e.params, e.extra, e.uid, e.conversion);
         });
     }
 

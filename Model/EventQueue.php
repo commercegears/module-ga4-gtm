@@ -12,7 +12,8 @@ use Magento\Framework\Stdlib\CookieManagerInterface;
 use Psr\Log\LoggerInterface;
 
 /**
- * Server-side queue for events that happen in POST/AJAX requests (add_to_cart, remove_from_cart, login, sign_up).
+ * Server-side queue for events that happen in POST/AJAX requests (add_to_cart, remove_from_cart, login, sign_up,
+ * generate_lead).
  * Stored in the session and delivered to the browser through the "commercegears-ga4" customer-data section,
  * so it works with full-page cache, Luma AJAX carts and Hyvä. Events stay in the section for a while
  * (a section response can be lost when the page navigates away mid-request, e.g. Luma's cart update);
@@ -41,17 +42,23 @@ class EventQueue
     /**
      * @param array<string, mixed> $params
      * @param array<string, mixed> $extra top-level dataLayer keys (for example user_data)
+     * @param array<string, mixed> $conversion Google Ads conversion fired right after the event, under the same
+     *                                         once-only id (send_to, value, currency, transaction_id)
      */
-    public function add(string $event, array $params, array $extra = []): void
+    public function add(string $event, array $params, array $extra = [], array $conversion = []): void
     {
         $events = $this->getPending();
-        $events[] = [
+        $entry = [
             'uid' => bin2hex(random_bytes(8)),
             'event' => $event,
             'params' => $params,
             'extra' => $extra,
             'ts' => time(),
         ];
+        if ($conversion) {
+            $entry['conversion'] = $conversion;
+        }
+        $events[] = $entry;
         $this->session->setData(self::SESSION_KEY, array_slice($events, -self::MAX_EVENTS));
         $this->queuedNow[$event] = true;
         try {
