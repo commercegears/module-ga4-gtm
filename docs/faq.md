@@ -59,8 +59,25 @@ page, it is set then and the purchase is not sent again.
 **Can I count Google Ads conversions from GA4?**
 Yes. Use **Tag Type = gtag.js**, enter your Google Ads ID (for example AW-123456789) in **Additional Google Tag IDs**
 and import the GA4 purchase event as a conversion in Google Ads. The module adds the Google Ads tag configuration so
-the ad click is stored (only with ad_storage consent), but no Google Ads conversion event, and its ecommerce events go
-to GA4 only, so nothing is counted twice. With Google Tag Manager, add a Conversion Linker tag to your container.
+the ad click is stored (only with ad_storage consent), but no Google Ads conversion event (unless you set a conversion
+label, see below), and its ecommerce events go to GA4 only, so nothing is counted twice. With Google Tag Manager, add a
+Conversion Linker tag to your container.
+
+**Can the module send Google Ads conversion tags directly?**
+Yes. Enter the conversion label in **Google Ads Conversions > Purchase Conversion Label** (and the AW- ID, unless it is
+already in Additional Google Tag IDs). The success page then sends `gtag('event', 'conversion', ...)` once per order
+with the purchase value, currency and order number, after the enhanced conversions data. With Google Tag Manager the
+data is in the dataLayer and the GTM Container Export adds the Google Ads tags. Do not also import the GA4 purchase as
+a conversion for the same action, or it is counted twice.
+
+**Is a contact form message tracked as a lead?**
+Yes, by default: GA4 `generate_lead` is sent on the page after a successful Contact Us submission (not on the button
+click), with form_id and form_name only. Newsletter sign-ups can be added in **Leads > Forms**, and a **Lead Conversion
+Label** sends a Google Ads lead conversion as well. Select no form to switch it off.
+
+**Can I track clicks on certain links, such as links to a demo or a booking site?**
+Yes. Add a line to **Click Events > Events**, for example `demo_open: a[href*="demo.example.com"]`. Each click sends the
+event with the link address (without personal data in it).
 
 **Can free orders be left out?**
 Yes. **Skip Zero-value Orders = Yes** sends no purchase for orders whose purchase value is 0, for example a free

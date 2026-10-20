@@ -8,7 +8,9 @@
     "Google Consent Mode, with or without CommerceGears Cookie Consent",
     "Refunds sent from the server via the Measurement Protocol",
     "Ready-to-import GTM container",
-    "Google Ads tag IDs for GA4 conversion import (gtag.js)",
+    "Google Ads purchase and lead conversions, once per order, or GA4 conversion import",
+    "generate_lead after successful contact form and newsletter sign-ups",
+    "Click events for chosen links, such as demo or booking links",
     "Optional enhanced conversions, only after Marketing consent"
   ],
   "benefits": [

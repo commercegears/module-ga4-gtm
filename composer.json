@@ -21,6 +21,8 @@
     },
     "suggest": {
         "commercegears/module-cookie-consent": "^2.0",
+        "magento/module-contact": "generate_lead for the Contact Us form",
+        "magento/module-newsletter": "generate_lead for newsletter sign-ups",
         "hyva-themes/magento2-default-theme": "Hyvä storefront support (no extra compatibility module needed)"
     },
     "autoload": {

@@ -97,7 +97,52 @@ and per store view.
 | Purchase Value Includes Shipping | Whether value includes shipping. Shipping is always sent separately in the shipping parameter as well. Default: Yes. |
 | Skip Zero-value Orders | **Yes**: no purchase event for orders whose purchase value is 0 (for example free products). The order is still marked as handled, so it is never sent later. Default: No. |
 | Maximum Items per view_item_list | Keeps the dataLayer small on long category pages. Default: 50; GA4 accepts up to 200. |
-| Enhanced Conversions (user_data) | Adds SHA-256 hashed email, phone, name and street (plus city, region, postcode and country) as user_data to purchase, sign_up and login. With CommerceGears Cookie Consent it is only set after the visitor accepts Marketing (ad_user_data). Only enable if your privacy policy covers it. Default: No. |
+| Enhanced Conversions (user_data) | Adds SHA-256 hashed email, phone, name and street (plus city, region, postcode and country) as user_data to purchase, sign_up, login and generate_lead (and to the Google Ads conversions). With CommerceGears Cookie Consent it is only set after the visitor accepts Marketing (ad_user_data). Only enable if your privacy policy covers it. Default: No. |
+
+### Google Ads Conversions
+
+![Google Ads Conversions settings](images/admin-google-ads.png)
+
+| Setting | What it does |
+| --- | --- |
+| Google Ads Conversion ID | Your Google Ads tag ID, for example AW-123456789 (Google Ads > Goals > Conversions > your conversion > Tag setup). Empty: the first AW- ID in **Additional Google Tag IDs** is used. A pasted `AW-123456789/label` keeps the ID. Default: empty. |
+| Purchase Conversion Label | The part after "/" in `send_to` of your purchase conversion action. When set, the order success page sends a Google Ads conversion once per order, with the same value, currency and order number (transaction_id) as the GA4 purchase. Empty: no purchase conversion. Default: empty. |
+| Lead Conversion Label | Optional label of a lead conversion action, sent with every generate_lead (see Leads). Default: empty. |
+
+Labels may contain letters, digits, "-" and "_"; anything else is refused when saved. See
+[Google Ads conversion tags](#google-ads-conversion-tags-direct) below.
+
+### Leads (generate_lead)
+
+![Leads settings](images/admin-leads.png)
+
+| Setting | What it does |
+| --- | --- |
+| Forms | Forms whose successful submission sends GA4 `generate_lead`: **Contact Us form** (default), **Newsletter sign-up**, **Other forms (reported by another module)**. Select none to send no generate_lead. |
+| Lead Value | Optional value of a lead, sent as `value` with the currency from **Ecommerce Data > Currency** (also with the lead conversion). Empty: no value and no currency. Default: empty. |
+
+generate_lead is only sent when Magento has accepted the form on the server (the contact message was handed over for
+sending, the newsletter subscription was saved), never on the button click, so a form with errors or a spam
+submission is not counted. It is queued on the server and sent on the next page, once. The parameters are `form_id`
+(`contact`, `newsletter`), `form_name` (`Contact Us`, `Newsletter`) and, when a module passes one, `lead_source`.
+Nothing the visitor typed is sent in parameters or URLs; the email and phone number only go into the hashed user_data
+when **Enhanced Conversions** is on.
+
+### Click Events
+
+![Click Events setting](images/admin-click-events.png)
+
+| Setting | What it does |
+| --- | --- |
+| Events | One rule per line: an event name, a colon and a CSS selector, for example `demo_open: a[href*="demo.example.com"]`. A click on a matching element (or anything inside it) sends that GA4 event with `link_url` and `link_domain` of the link. Up to 20 lines. Default: empty. |
+
+- Event names use a-z, 0-9 and "_" (up to 40 characters, starting with a letter). Names this module already sends
+  (purchase, generate_lead, add_to_cart, ...) and names GA4 reserves (page_view, session_start, names starting with
+  `google_`, ...) are refused, so a click can never be counted as a sale or a lead.
+- `link_url` leaves out the #fragment and every query parameter except short codes (letters, digits, "-", "_", ".")
+  whose name does not look personal (email, name, phone, token, ...), so `?tour=intro&utm_source=shop` is kept and
+  `?email=...` is dropped. mailto: and tel: links send no link_url.
+- To use the event as a Google Ads conversion, mark it as a key event in GA4 and import it into Google Ads.
 
 ### Refunds (Measurement Protocol)
 
@@ -123,6 +168,9 @@ and per store view.
 | purchase | Order success page, once per order | All |
 | refund | Credit memo created (sent from the server) | Not in the browser |
 | login / sign_up / search | Customer login, registration, search results page | Luma and Hyvä |
+| generate_lead | The page after a successful Contact Us form or newsletter sign-up (see Leads) | Luma and Hyvä |
+| your click events (for example demo_open) | A click on an element matching a Click Events rule | Luma and Hyvä |
+| Google Ads conversion | Right after purchase / generate_lead, when a conversion label is set | All |
 
 ![view_item_list on a Hyvä category page](images/hyva-view-item-list.png)
 
@@ -180,7 +228,37 @@ To count Google Ads conversions from your GA4 purchases (Google Ads > Goals > Co
    Yes** to leave free orders out, and **Enhanced Conversions (user_data) = Yes**.
 
 With Google Tag Manager the setting is ignored: add a Conversion Linker tag (or a Google tag with your AW- ID) to your
-container instead. The GTM container export does not contain Google Ads tags.
+container instead.
+
+### Google Ads conversion tags (direct)
+
+Instead of importing GA4 key events, you can send Google Ads conversions directly. Use one of the two ways for the same
+action, not both, or Google Ads counts it twice.
+
+1. In Google Ads create a purchase conversion action (and optionally a lead one) with "Google tag" / "event snippet"
+   set-up and copy the `send_to` value, for example `AW-123456789/AbC-D_efG-h12`.
+2. Enter the ID part in **Google Ads Conversion ID** (or leave it empty when that AW- ID is already in **Additional
+   Google Tag IDs**) and the label in **Purchase Conversion Label** / **Lead Conversion Label**.
+
+**gtag.js**: the AW- ID is configured on every page (conversion linker), and on the success page the module sends,
+once per order:
+
+```js
+gtag('set', 'user_data', {...});            // only with Enhanced Conversions and ad_user_data consent
+gtag('event', 'purchase', {...});           // GA4, send_to = the GA4 measurement IDs
+gtag('event', 'conversion', {send_to: 'AW-123456789/AbC-D_efG-h12', value: 75.00, currency: 'GBP', transaction_id: '000000501'});
+```
+
+The conversion uses exactly the purchase's value, currency and transaction_id (so **Purchase Value Includes Tax /
+Shipping** and **Skip Zero-value Orders** apply to it too) and travels inside the purchase event: the same "already
+sent" mark on the order and in the browser covers both, so a reload, the back button or a second tab repeat neither.
+The lead conversion follows generate_lead the same way (`value`/`currency` only when a Lead Value is set).
+
+**Google Tag Manager**: the purchase and generate_lead dataLayer entries get an `ads_conversion` object
+(`send_to`, `value`, `currency`, `transaction_id`), which is cleared again right after that entry. When a label is set,
+the GTM Container Export adds a Conversion Linker tag and a Google Ads Conversion Tracking tag per label, reading
+`ads_conversion.value`, `.currency` and `.transaction_id`. To use enhanced conversions in GTM, switch on "Include
+user-provided data" in that tag and point it at the `user_data` of the same entry.
 
 ### Enhanced conversions
 
@@ -194,7 +272,8 @@ EU/EEA countries, the UK, Switzerland, Türkiye, the US, Canada, Australia and N
 With CommerceGears Cookie Consent, user_data is only set once the visitor has granted ad_user_data (the Marketing
 category):
 
-- gtag.js: `gtag('set', 'user_data', ...)` right before the purchase event.
+- gtag.js: `gtag('set', 'user_data', ...)` right before the purchase (or generate_lead) event, so it is also set before
+  the Google Ads conversion that follows it.
 - Google Tag Manager: `user_data` in the purchase dataLayer entry (use it in a "User-Provided Data" variable).
 - Consent given later on the success page: user_data is set then (in GTM as a `commercegears_user_data` dataLayer
   event); the purchase itself is not sent again.
@@ -235,6 +314,10 @@ refund is claimed before it is sent, so cron and the CLI cannot send it twice.
 - Add page events: implement `CommerceGears\Ga4\Api\PageEventProviderInterface` and add it to the `providers` argument
   of the block `commercegears.ga4.datalayer` in a layout handle.
 - Build items: `CommerceGears\Ga4\Model\ItemBuilder::fromProduct()`, `fromQuoteItem()`, `fromOrderItem()`.
+- Report a lead from your own form after it was saved successfully (needs **Leads > Forms = Other forms**):
+  `CommerceGears\Ga4\Model\LeadTracker::track('quote_request', 'Quote request', 'product page', $email)`, or dispatch the
+  event `commercegears_ga4_lead` with `form_id`, `form_name` and optionally `lead_source`, `email`, `telephone` (email
+  and phone are only used hashed for user_data). The Lead Value and Lead Conversion Label apply.
 
 ## 10. Permissions (ACL)
 

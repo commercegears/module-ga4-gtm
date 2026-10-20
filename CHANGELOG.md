@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.2.0 (2026-10-20)
+- New: Google Ads purchase conversion, sent once per order with the same value as the GA4 purchase.
+- New: generate_lead for sent contact forms and newsletter sign-ups, optionally as an Ads conversion.
+- New: Click Events setting sends your own GA4 event for chosen links, such as links to a demo.
+- Improvement: the GTM container export adds Google Ads conversion tags and the generate_lead tag.
+
 ## 2.1.0 (2026-10-14)
 - New: Additional Google Tag IDs (such as Google Ads AW-) for Ads conversions imported from GA4.
 - New: Skip Zero-value Orders setting, so free orders send no purchase event.
