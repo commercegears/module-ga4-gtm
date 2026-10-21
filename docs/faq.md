@@ -91,3 +91,7 @@ there.
 Yes. In the browser call `window.swGa4.push('event_name', {...})`. On the server, queue an event with
 `CommerceGears\Ga4\Model\EventQueue::add()`, or add page events by implementing
 `CommerceGears\Ga4\Api\PageEventProviderInterface`. The user guide has the details.
+
+**Is GA4 & Google Tag Manager free?**
+Yes. GA4 & Google Tag Manager is free to download from commercegears.com and is installed with Composer like our other modules.
+It needs `commercegears/module-core`, which Composer installs automatically.

@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.2.1 (2026-10-21)
+- Improvement: the module is now free.
+
 ## 2.2.0 (2026-10-20)
 - New: Google Ads purchase conversion, sent once per order with the same value as the GA4 purchase.
 - New: generate_lead for sent contact forms and newsletter sign-ups, optionally as an Ads conversion.
