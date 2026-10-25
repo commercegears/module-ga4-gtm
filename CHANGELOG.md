@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.2.2 (2026-10-25)
+- Improvement: neutral example in the Click Events setting.
+
 ## 2.2.1 (2026-10-21)
 - Improvement: the module is now free.
 

@@ -206,7 +206,7 @@ class Config
     }
 
     /**
-     * Click events: [['event' => 'demo_open', 'selector' => 'a[href*="demo.example.com"]'], ...]. Invalid lines are skipped.
+     * Click events: [['event' => 'booking_open', 'selector' => 'a[href*="booking.example.com"]'], ...]. Invalid lines are skipped.
      *
      * @return array<int, array{event: string, selector: string}>
      */

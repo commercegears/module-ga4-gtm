@@ -126,14 +126,14 @@ class AdsSettingsTest extends TestCase
 
     public function testClickRules(): void
     {
-        $value = "# comment\n demo_open :  a[href*=\"demo.commercegears.com\"] \n\ncta_click: .hero a.button:not(.secondary)\n";
+        $value = "# comment\n booking_open :  a[href*=\"booking.example.com\"] \n\ncta_click: .hero a.button:not(.secondary)\n";
         self::assertSame(
-            "demo_open: a[href*=\"demo.commercegears.com\"]\ncta_click: .hero a.button:not(.secondary)",
+            "booking_open: a[href*=\"booking.example.com\"]\ncta_click: .hero a.button:not(.secondary)",
             ClickRules::normalise($value)
         );
         $config = $this->config(['clicks/rules' => ClickRules::normalise($value) . "\npurchase: a.buy"]);
         self::assertSame([
-            ['event' => 'demo_open', 'selector' => 'a[href*="demo.commercegears.com"]'],
+            ['event' => 'booking_open', 'selector' => 'a[href*="booking.example.com"]'],
             ['event' => 'cta_click', 'selector' => '.hero a.button:not(.secondary)'],
         ], $config->getClickRules(), 'invalid lines saved earlier are skipped');
     }
@@ -144,15 +144,15 @@ class AdsSettingsTest extends TestCase
     public static function invalidClickProvider(): array
     {
         return [
-            'no selector' => ['demo_open'],
-            'empty selector' => ['demo_open:'],
-            'upper case' => ['Demo_Open: a'],
+            'no selector' => ['booking_open'],
+            'empty selector' => ['booking_open:'],
+            'upper case' => ['Booking_Open: a'],
             'module event' => ['purchase: a.buy'],
             'lead' => ['generate_lead: form button'],
             'reserved prefix' => ['google_click: a'],
             'GA4 automatic' => ['page_view: a'],
-            'css block' => ['demo_open: a { color: red }'],
-            'script' => ['demo_open: a</script><script>alert(1)'],
+            'css block' => ['booking_open: a { color: red }'],
+            'script' => ['booking_open: a</script><script>alert(1)'],
             'too many' => [implode("\n", array_map(static fn (int $i): string => 'e' . $i . ': a', range(1, 21)))],
         ];
     }

@@ -134,7 +134,7 @@ when **Enhanced Conversions** is on.
 
 | Setting | What it does |
 | --- | --- |
-| Events | One rule per line: an event name, a colon and a CSS selector, for example `demo_open: a[href*="demo.example.com"]`. A click on a matching element (or anything inside it) sends that GA4 event with `link_url` and `link_domain` of the link. Up to 20 lines. Default: empty. |
+| Events | One rule per line: an event name, a colon and a CSS selector, for example `booking_open: a[href*="booking.example.com"]`. A click on a matching element (or anything inside it) sends that GA4 event with `link_url` and `link_domain` of the link. Up to 20 lines. Default: empty. |
 
 - Event names use a-z, 0-9 and "_" (up to 40 characters, starting with a letter). Names this module already sends
   (purchase, generate_lead, add_to_cart, ...) and names GA4 reserves (page_view, session_start, names starting with
@@ -169,7 +169,7 @@ when **Enhanced Conversions** is on.
 | refund | Credit memo created (sent from the server) | Not in the browser |
 | login / sign_up / search | Customer login, registration, search results page | Luma and Hyvä |
 | generate_lead | The page after a successful Contact Us form or newsletter sign-up (see Leads) | Luma and Hyvä |
-| your click events (for example demo_open) | A click on an element matching a Click Events rule | Luma and Hyvä |
+| your click events (for example booking_open) | A click on an element matching a Click Events rule | Luma and Hyvä |
 | Google Ads conversion | Right after purchase / generate_lead, when a conversion label is set | All |
 
 ![view_item_list on a Hyvä category page](images/hyva-view-item-list.png)

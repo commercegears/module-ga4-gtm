@@ -44,13 +44,13 @@ class ClickRules extends Value
                     ));
                 case 'reserved':
                     throw new LocalizedException(__(
-                        '"%1": %2 is sent by this module or reserved by Google Analytics. Choose another event name, for example demo_open.',
+                        '"%1": %2 is sent by this module or reserved by Google Analytics. Choose another event name, for example booking_open.',
                         $rule['line'],
                         $rule['event']
                     ));
                 case 'selector':
                     throw new LocalizedException(__(
-                        '"%1": enter a CSS selector after the ":" (up to 300 characters, without { } or ;), for example a[href*="demo.example.com"].',
+                        '"%1": enter a CSS selector after the ":" (up to 300 characters, without { } or ;), for example a[href*="booking.example.com"].',
                         $rule['line']
                     ));
             }

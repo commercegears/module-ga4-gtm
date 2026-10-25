@@ -75,8 +75,8 @@ Yes, by default: GA4 `generate_lead` is sent on the page after a successful Cont
 click), with form_id and form_name only. Newsletter sign-ups can be added in **Leads > Forms**, and a **Lead Conversion
 Label** sends a Google Ads lead conversion as well. Select no form to switch it off.
 
-**Can I track clicks on certain links, such as links to a demo or a booking site?**
-Yes. Add a line to **Click Events > Events**, for example `demo_open: a[href*="demo.example.com"]`. Each click sends the
+**Can I track clicks on certain links, such as links to a booking site or a brochure?**
+Yes. Add a line to **Click Events > Events**, for example `booking_open: a[href*="booking.example.com"]`. Each click sends the
 event with the link address (without personal data in it).
 
 **Can free orders be left out?**

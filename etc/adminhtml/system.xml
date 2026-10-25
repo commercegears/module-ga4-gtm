@@ -164,7 +164,7 @@
                 <label>Click Events</label>
                 <field id="rules" translate="label comment" type="textarea" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Events</label>
-                    <comment><![CDATA[One per line: event name, a colon and a CSS selector, for example <code>demo_open: a[href*="demo.example.com"]</code>. A click on a matching element (or inside it) sends that event with link_url (without #fragment; only short query values such as ?tour=intro are kept) and link_domain. Event names: a-z, 0-9 and _; names this module or GA4 already use are refused. Up to 20 lines. Default: empty.]]></comment>
+                    <comment><![CDATA[One per line: event name, a colon and a CSS selector, for example <code>booking_open: a[href*="booking.example.com"]</code>. A click on a matching element (or inside it) sends that event with link_url (without #fragment; only short query values such as ?tour=intro are kept) and link_domain. Event names: a-z, 0-9 and _; names this module or GA4 already use are refused. Up to 20 lines. Default: empty.]]></comment>
                     <backend_model>CommerceGears\Ga4\Model\Config\Backend\ClickRules</backend_model>
                 </field>
             </group>

@@ -28,7 +28,7 @@ Documentation: [User guide](docs/user-guide.md) · [FAQ](docs/faq.md)
   after a server-confirmed successful submit of the Contact Us form (default) and optionally the newsletter sign-up or
   other modules' forms; queued on the server and delivered once on the next page. No form input in parameters or URLs
   (email/phone only hashed in user_data).
-- **Click events**: rules like `demo_open: a[href*="demo.example.com"]` send a custom GA4 event with link_url (no
+- **Click events**: rules like `booking_open: a[href*="booking.example.com"]` send a custom GA4 event with link_url (no
   fragment, no personal query values) and link_domain. Names used by the module or reserved by GA4 are refused.
 - **Consent**: with *CommerceGears Cookie Consent* enabled the Consent Mode defaults come from that module (printed before
   the tag) and nothing else is needed. Without it you can set the defaults here (denied / granted / leave to your consent
