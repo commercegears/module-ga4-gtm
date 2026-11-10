@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.2.3 (2026-11-10)
+- Fix: downloaded GTM container files are no longer left on the server.
+
 ## 2.2.2 (2026-10-25)
 - Improvement: neutral example in the Click Events setting.
 

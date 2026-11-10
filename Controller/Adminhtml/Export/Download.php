@@ -42,7 +42,7 @@ class Download extends Action implements HttpPostActionInterface
         }
         return $this->fileFactory->create(
             'commercegears-ga4-gtm-container.json',
-            $json,
+            ['type' => 'string', 'value' => $json, 'rm' => true],
             DirectoryList::VAR_DIR,
             'application/json'
         );
